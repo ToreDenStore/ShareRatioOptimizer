@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { local } from 'src/environments/local';
+import { ApiResponseHistoricalPrice } from '../models/api-response-historical-price';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +34,8 @@ export class HistoricalPriceService {
       filter: 'history',
       period1: '1546448400',
       period2: '1562086800',
-      symbol: 'AMRN'
+      // symbol: 'AMRN'
+      symbol: 'AAPL'
     }
   };
 
@@ -42,7 +43,7 @@ export class HistoricalPriceService {
     private http: HttpClient
   ) { }
 
-  getHistoricalData(): Observable<any> {
+  getHistoricalData(dateFrom: Date, dateTo: Date, ticker: string): Observable<ApiResponseHistoricalPrice> {
     const urlString: string = this.apiUrl + '/get-historical-data';
 
     // const request =  {
@@ -53,34 +54,14 @@ export class HistoricalPriceService {
     //   symbol: 'AMRN'
     // };
 
+    this.httpOptions.params.period1 = (dateFrom.getTime() / 1000).toString();
+    this.httpOptions.params.period2 = (dateTo.getTime() / 1000).toString();
+    this.httpOptions.params.symbol = ticker;
+
     console.log('Calling ' + urlString);
-    return this.http.get(urlString, this.httpOptions)
-      .pipe(
-        tap(x => console.log('Got historical data')),
-        catchError(this.handleError<any>('Get historical data failed'))
-      );
-  }
+    console.log('Http options: ' + JSON.stringify(this.httpOptions));
 
-  /**
-   * Handle Http operation that failed.
-   * Let the app continue.
-   * @param operation - name of the operation that failed
-   * @param result - optional value to return as the observable result
-   */
-  private handleError<T>(result?: T) {
-    // console.log('Handling error');
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.log('logging error');
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      // this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
+    return this.http.get<ApiResponseHistoricalPrice>(urlString, this.httpOptions);
   }
 
 }
