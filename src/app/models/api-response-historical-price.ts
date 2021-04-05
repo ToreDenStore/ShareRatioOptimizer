@@ -13,6 +13,7 @@ export class Price {
     close: number;
     volume: number;
     adjclose: number;
+    type: string;
 }
 
 export class Event {

@@ -32,10 +32,10 @@ export class HistoricalPriceService {
     params: {
       frequency: '1d',
       filter: 'history',
-      period1: '1546448400',
-      period2: '1562086800',
+      period1: '',
+      period2: '',
       // symbol: 'AMRN'
-      symbol: 'AAPL'
+      symbol: ''
     }
   };
 

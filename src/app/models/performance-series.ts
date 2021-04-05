@@ -2,10 +2,10 @@ export class PerformanceSeries {
     ticker: string;
     dateFrom: Date;
     dateTo: Date;
-    performanceSeries: Performance[];
+    performanceSeries: PerformancePoint[];
 }
 
-export class Performance {
+export class PerformancePoint {
     date: Date;
     performance: number;
 }
