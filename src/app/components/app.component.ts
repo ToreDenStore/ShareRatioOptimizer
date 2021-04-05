@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ApiResponseHistoricalPrice } from '../models/api-response-historical-price';
 import { PerformancePoint, PerformanceSeries } from '../models/performance-series';
 import { HistoricalPriceService } from '../services/historical-price.service';
+import { std } from 'mathjs';
 
 @Component({
   selector: 'app-root',
@@ -47,20 +48,14 @@ export class AppComponent {
         response => {
           console.log('Response received for symbol ' + symbol + '.');
           if (response != null) {
-            // this.data.push(response);
-
-            const performances: PerformancePoint[] = [];
-            // response.prices.forEach(price => {
-            //   let performance: PerformancePoint = new PerformancePoint();
-            //   performance.date = new Date(price.date);
-            //   performance.performance
-            // });
 
             const filteredList = response.prices.filter(x => {
               return x.type == null;
             });
 
             // console.log('Filtered list: ' + JSON.stringify(filteredList));
+            const performances: PerformancePoint[] = [];
+            const performancesNumbers: number[] = [];
 
             // List is sorted by latest date first
             for (let index = 0; index < filteredList.length - 1; index++) {
@@ -69,10 +64,13 @@ export class AppComponent {
               performancePoint.date = new Date(price.date * 1000);
               performancePoint.performance = price.close / filteredList[index + 1].close - 1;
               performances.push(performancePoint);
+              performancesNumbers.push(performancePoint.performance);
             }
 
             // console.log('Performance series: ' + JSON.stringify(performances));
             performanceSeries.performanceSeries = performances;
+
+            performanceSeries.stDev = std(performancesNumbers);
             this.performanceSeriesList.push(performanceSeries);
           }
           // this.response = 'Response: ' + JSON.stringify(response);
@@ -80,6 +78,7 @@ export class AppComponent {
         , error => {
           console.log('Error: ' + JSON.stringify(error));
         }
+
       );
     });
   }

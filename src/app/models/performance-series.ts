@@ -1,5 +1,6 @@
 export class PerformanceSeries {
     ticker: string;
+    stDev: number;
     dateFrom: Date;
     dateTo: Date;
     performanceSeries: PerformancePoint[];
