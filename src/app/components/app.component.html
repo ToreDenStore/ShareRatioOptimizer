@@ -13,6 +13,7 @@
 response:
 <div *ngFor="let performanceSeries of performanceSeriesList">
   <h3>{{performanceSeries.ticker}}: {{performanceSeries.dateFrom | date}} - {{performanceSeries.dateTo | date}}</h3>
+  <p>Return: {{performanceSeries.return | percent:'.2'}}</p>
   <p>StDev: {{performanceSeries.stDev | percent:'.2'}}</p>
 </div>
 

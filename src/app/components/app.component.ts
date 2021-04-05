@@ -47,6 +47,8 @@ export class AppComponent {
       this.historicalPriceService.getHistoricalData(this.fromDate, this.toDate, symbol).subscribe(
         response => {
           console.log('Response received for symbol ' + symbol + '.');
+          console.log('Response: ' + JSON.stringify(response));
+          
           if (response != null) {
 
             const filteredList = response.prices.filter(x => {
@@ -71,6 +73,9 @@ export class AppComponent {
             performanceSeries.performanceSeries = performances;
 
             performanceSeries.stDev = std(performancesNumbers);
+            performanceSeries.return = filteredList[0].close / filteredList[filteredList.length - 1].close - 1;
+            console.log('End close: ' + filteredList[0].close);
+            console.log('Start close: ' + filteredList[filteredList.length - 1].close);
             this.performanceSeriesList.push(performanceSeries);
           }
           // this.response = 'Response: ' + JSON.stringify(response);
