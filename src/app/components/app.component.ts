@@ -14,8 +14,9 @@ export class AppComponent {
   private fromDate = new Date('2020-01-01');
   private toDate = new Date('2020-12-31');
 
-  response: string;
-  data: ApiResponseHistoricalPrice[] = [];
+  // response: string;
+  // data: ApiResponseHistoricalPrice[] = [];
+  performanceSeriesList: PerformanceSeries[];
 
   // GUI elements
   public tickerSymbols: string[] = [];
@@ -32,7 +33,8 @@ export class AppComponent {
   }
 
   getTestRequest(): void {
-    this.data = [];
+    // this.data = [];
+    this.performanceSeriesList = [];
 
     this.tickerSymbols.forEach(symbol => {
       const performanceSeries = new PerformanceSeries();
@@ -45,7 +47,7 @@ export class AppComponent {
         response => {
           console.log('Response received for symbol ' + symbol + '.');
           if (response != null) {
-            this.data.push(response);
+            // this.data.push(response);
 
             const performances: PerformancePoint[] = [];
             // response.prices.forEach(price => {
@@ -58,7 +60,7 @@ export class AppComponent {
               return x.type == null;
             });
 
-            console.log('Filtered list: ' + JSON.stringify(filteredList));
+            // console.log('Filtered list: ' + JSON.stringify(filteredList));
 
             // List is sorted by latest date first
             for (let index = 0; index < filteredList.length - 1; index++) {
@@ -69,10 +71,11 @@ export class AppComponent {
               performances.push(performancePoint);
             }
 
-            console.log('Performance series: ' + JSON.stringify(performances));
-            
+            // console.log('Performance series: ' + JSON.stringify(performances));
+            performanceSeries.performanceSeries = performances;
+            this.performanceSeriesList.push(performanceSeries);
           }
-          this.response = 'Response: ' + JSON.stringify(response);
+          // this.response = 'Response: ' + JSON.stringify(response);
         }
         , error => {
           console.log('Error: ' + JSON.stringify(error));

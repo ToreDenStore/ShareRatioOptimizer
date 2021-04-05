@@ -11,7 +11,8 @@
   Test API
 </button>
 response:
-<p>
-  {{this.data | json}}
-</p>
+<div *ngFor="let performanceSeries of performanceSeriesList">
+  <h3>{{performanceSeries.ticker}}: {{performanceSeries.dateFrom | date}} - {{performanceSeries.dateTo | date}}</h3>
+  {{this.performanceSeries.performanceSeries | json}}
+</div>
 
