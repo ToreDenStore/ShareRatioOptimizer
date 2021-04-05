@@ -2,7 +2,9 @@
   request-tester works!
 </p>
 
-<tag-input [(ngModel)]="tickerSymbols" (ngModelChange)="change()" modelAsStrings=true>
+<tag-input [(ngModel)]="tickerSymbols" (ngModelChange)="change()"
+  modelAsStrings="true"
+  maxItems="3">
 </tag-input>
 
 <button (click)="getTestRequest()">
