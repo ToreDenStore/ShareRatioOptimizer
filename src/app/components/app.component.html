@@ -2,6 +2,9 @@
   request-tester works!
 </p>
 
+<tag-input [(ngModel)]="tickerSymbols" (ngModelChange)="change()" modelAsStrings=true>
+</tag-input>
+
 <button (click)="getTestRequest()">
   Test API
 </button>
@@ -10,5 +13,3 @@ response:
   {{this.response}}
 </p>
 
-<tag-input [ngModel]="['hardocoded-item', 'hardocoded-item 2']">
-</tag-input>
