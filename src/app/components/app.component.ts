@@ -54,6 +54,8 @@ export class AppComponent {
     calculation.holdingsData = holdings;
     calculation.performanceSeries = performancePoints;
     calculation.performance = PerformanceUtils.getTotalPerformance(performances);
+    calculation.stDev = PerformanceUtils.getStandardDeviationAnnualized(performances);
+    calculation.sharpeRatio = calculation.performance / calculation.stDev;
 
     return calculation;
   }

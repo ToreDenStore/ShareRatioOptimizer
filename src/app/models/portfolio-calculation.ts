@@ -1,7 +1,7 @@
 import { PerformancePoint } from './performance-series';
 
 export class PortfolioCalculation {
-    sharpe: number;
+    stDev: number;
     performance: number;
     sharpeRatio: number;
     performanceSeries: PerformancePoint[];
