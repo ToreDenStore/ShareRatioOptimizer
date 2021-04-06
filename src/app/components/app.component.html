@@ -13,6 +13,9 @@
 <button (click)="makePortfolioCalculation()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
   Make portfolio calculation
 </button>
+<button (click)="optimizeSharpe()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
+  Find optimized portfolio
+</button>
 response:
 <div *ngFor="let performanceSeries of performanceSeriesList">
   <h3>{{performanceSeries.ticker}}: {{performanceSeries.dateFrom | date}} - {{performanceSeries.dateTo | date}}</h3>

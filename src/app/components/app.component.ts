@@ -28,8 +28,58 @@ export class AppComponent {
   // GUI elements
   public tickerSymbols: string[] = [];
 
-  private static optimizeSharpe(listOfSeries: PerformanceSeries[]): PerformanceSeries[] {
-    return null;
+  private static optimizeSharpe(listOfSeries: PerformanceSeries[]): PortfolioCalculation {
+    const weights: number[] = [0.01, 0.1, 0.2, 0.5, 1, 2, 5, 10, 100];
+    const calculations: PortfolioCalculation[] = [];
+    let maxSharpe = -99;
+
+    if (listOfSeries.length === 3) {
+      console.log('Optimizing...');
+
+      for (let i = 0; i < weights.length; i++) {
+        for (let j = 0; j < weights.length; j++) {
+          const sumWeights = weights[i] + weights[j] + 1;
+
+          const weight1 = weights[i] / sumWeights;
+          const weight2 = weights[j] / sumWeights;
+          const weight3 = 1 / sumWeights;
+
+          const holdings: PortfolioHolding[] = [];
+          for (let index = 0; index < listOfSeries.length; index++) {
+            const performanceSerie = listOfSeries[index];
+            const holding = new PortfolioHolding();
+            holding.performanceSeries = performanceSerie.performanceSeries;
+            holding.ticker = performanceSerie.ticker;
+            if (index === 0) {
+              holding.weight = weight1;
+            } else if (index === 1) {
+              holding.weight = weight2;
+            } else {
+              holding.weight = weight3;
+            }
+            holdings.push(holding);
+          }
+
+          const calculation = AppComponent.runPortfolioCalculation(holdings);
+          console.log('Sharpe ratio for this calc: ' + calculation.sharpeRatio);
+
+          calculations.push(calculation);
+          if (calculation.sharpeRatio > maxSharpe) {
+            maxSharpe = calculation.sharpeRatio;
+          }
+        }
+      }
+    }
+
+    console.log('Best sharpe: ' + maxSharpe);
+
+    const bestCalc = calculations.find(x => {
+      return x.sharpeRatio === maxSharpe;
+    });
+
+    // console.log('Best calc: ' + JSON.stringify(bestCalc));
+
+    return bestCalc;
   }
 
   private static runPortfolioCalculation(holdings: PortfolioHolding[]): PortfolioCalculation {
@@ -84,6 +134,10 @@ export class AppComponent {
     this.calculation = calculation;
 
     // console.log('Portfolio calculation: ' + JSON.stringify(calculation));
+  }
+
+  optimizeSharpe(): void {
+    this.calculation = AppComponent.optimizeSharpe(this.performanceSeriesList);
   }
 
   getTestRequest(): void {
