@@ -23,6 +23,7 @@ export class AppComponent {
   // response: string;
   // data: ApiResponseHistoricalPrice[] = [];
   performanceSeriesList: PerformanceSeries[];
+  calculation: PortfolioCalculation;
 
   // GUI elements
   public tickerSymbols: string[] = [];
@@ -70,22 +71,25 @@ export class AppComponent {
   makePortfolioCalculation(): void {
     const holdings: PortfolioHolding[] = [];
 
-    let holding = new PortfolioHolding();
-    let example = this.performanceSeriesList[0];
-    holding.performanceSeries = example.performanceSeries;
-    holding.ticker = example.ticker;
-    holding.weight = 1;
-
-    holdings.push(holding);
+    this.performanceSeriesList.forEach(performanceSerie => {
+      const holding = new PortfolioHolding();
+      holding.performanceSeries = performanceSerie.performanceSeries;
+      holding.ticker = performanceSerie.ticker;
+      holding.weight = 1 / this.performanceSeriesList.length;
+      holdings.push(holding);
+    });
 
     const calculation = AppComponent.runPortfolioCalculation(holdings);
 
-    console.log('Portfolio calculation: ' + JSON.stringify(calculation));
+    this.calculation = calculation;
+
+    // console.log('Portfolio calculation: ' + JSON.stringify(calculation));
   }
 
   getTestRequest(): void {
     // this.data = [];
     this.performanceSeriesList = [];
+    this.calculation = null;
 
     this.tickerSymbols.forEach(symbol => {
       const performanceSeries = new PerformanceSeries();

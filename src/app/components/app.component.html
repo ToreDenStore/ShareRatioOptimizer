@@ -10,7 +10,7 @@
 <button (click)="getTestRequest()">
   Test API
 </button>
-<button (click)="makePortfolioCalculation()">
+<button (click)="makePortfolioCalculation()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
   Make portfolio calculation
 </button>
 response:
@@ -20,4 +20,12 @@ response:
   <p>StDev: {{performanceSeries.stDev | percent:'.2'}}</p>
   <p>Sharpe: {{performanceSeries.sharpeRatio | number: '.3'}}</p>
 </div>
-
+<div *ngIf="calculation">
+  <h3>Calculation:</h3>
+  <p>Return: {{calculation.performance| percent:'.2'}}</p>
+  <p>StDev: {{calculation.stDev | percent:'.2'}}</p>
+  <p>Sharpe: {{calculation.sharpeRatio | number: '.3'}}</p>
+  <p *ngFor="let holding of calculation.holdingsData">
+    {{holding.ticker}} weight - {{holding.weight | percent:'.2'}}
+  </p>
+</div>
