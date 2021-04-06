@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { PerformancePoint, PerformanceSeries } from '../models/performance-series';
 import { HistoricalPriceService } from '../services/historical-price.service';
 import { std } from 'mathjs';
+import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
+import { PerformanceUtils } from '../utils/performanceUtils';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +11,10 @@ import { std } from 'mathjs';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
+  constructor(
+    private historicalPriceService: HistoricalPriceService
+  ) { }
 
   // Constants
   private fromDate = new Date('2020-01-01');
@@ -21,15 +27,58 @@ export class AppComponent {
   // GUI elements
   public tickerSymbols: string[] = [];
 
-  constructor(
-    private historicalPriceService: HistoricalPriceService
-  ) { }
+  private static optimizeSharpe(listOfSeries: PerformanceSeries[]): PerformanceSeries[] {
+    return null;
+  }
+
+  private static runPortfolioCalculation(holdings: PortfolioHolding[]): PortfolioCalculation {
+    const days = holdings[0].performanceSeries.length;
+    const performances: number[] = [];
+    const performancePoints: PerformancePoint[] = [];
+
+    for (let index = 0; index < days; index++) {
+      let performance = 0;
+      holdings.forEach(holding => {
+        performance += holding.performanceSeries[index].performance * holding.weight;
+      });
+      performances.push(performance);
+
+      const point: PerformancePoint = {
+        date: holdings[0].performanceSeries[index].date,
+        performance
+      };
+      performancePoints.push(point);
+    }
+
+    const calculation = new PortfolioCalculation();
+    calculation.holdingsData = holdings;
+    calculation.performanceSeries = performancePoints;
+    calculation.performance = PerformanceUtils.getTotalPerformance(performances);
+
+    return calculation;
+  }
 
   ngOnInit(): void {
   }
 
   change(): void {
     console.log('Current model is ' + JSON.stringify(this.tickerSymbols));
+  }
+
+  makePortfolioCalculation(): void {
+    const holdings: PortfolioHolding[] = [];
+
+    let holding = new PortfolioHolding();
+    let example = this.performanceSeriesList[0];
+    holding.performanceSeries = example.performanceSeries;
+    holding.ticker = example.ticker;
+    holding.weight = 1;
+
+    holdings.push(holding);
+
+    const calculation = AppComponent.runPortfolioCalculation(holdings);
+
+    console.log('Portfolio calculation: ' + JSON.stringify(calculation));
   }
 
   getTestRequest(): void {

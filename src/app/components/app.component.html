@@ -10,6 +10,9 @@
 <button (click)="getTestRequest()">
   Test API
 </button>
+<button (click)="makePortfolioCalculation()">
+  Make portfolio calculation
+</button>
 response:
 <div *ngFor="let performanceSeries of performanceSeriesList">
   <h3>{{performanceSeries.ticker}}: {{performanceSeries.dateFrom | date}} - {{performanceSeries.dateTo | date}}</h3>
