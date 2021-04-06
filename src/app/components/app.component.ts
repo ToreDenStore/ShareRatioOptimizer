@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ApiResponseHistoricalPrice } from '../models/api-response-historical-price';
 import { PerformancePoint, PerformanceSeries } from '../models/performance-series';
 import { HistoricalPriceService } from '../services/historical-price.service';
 import { std } from 'mathjs';
@@ -72,12 +71,17 @@ export class AppComponent {
             // console.log('Performance series: ' + JSON.stringify(performances));
             performanceSeries.performanceSeries = performances;
 
-            performanceSeries.stDev = std(performancesNumbers);
+            // performanceSeries.stDev = std(performancesNumbers);
             performanceSeries.return = filteredList[0].close / filteredList[filteredList.length - 1].close - 1;
+            performanceSeries.stDev = std(performancesNumbers) * Math.sqrt(performancesNumbers.length);
+            performanceSeries.sharpeRatio = performanceSeries.return / performanceSeries.stDev;
+            this.performanceSeriesList.push(performanceSeries);
+
+            console.log('Return: ' + performanceSeries.return);
+            console.log('Annualized volatility: ' + performanceSeries.stDev);
+            console.log('Sharpe: ' + performanceSeries.sharpeRatio);
             console.log('End close: ' + filteredList[0].close);
             console.log('Start close: ' + filteredList[filteredList.length - 1].close);
-            performanceSeries.sharpeRatio = (performanceSeries.return / filteredList.length) / performanceSeries.stDev;
-            this.performanceSeriesList.push(performanceSeries);
           }
           // this.response = 'Response: ' + JSON.stringify(response);
         }
