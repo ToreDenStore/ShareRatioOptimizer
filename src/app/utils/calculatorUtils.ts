@@ -94,6 +94,8 @@ export class CalculatorUtils {
         return calculation;
     }
 
+    // TODO: Need to create an array of holding arrays by not hitting the recursive depth limit.
+    // Go back up the call stack instead of setting index to 0 and continuing
     private static doRecursiveRun(recursiveRun: RecursiveRun): RecursiveRun
     {
         CalculatorUtils.loopStopper += 1;
