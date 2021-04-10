@@ -4,6 +4,7 @@ import { HistoricalPriceService } from '../services/historical-price.service';
 import { std } from 'mathjs';
 import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
 import { CalculatorUtils } from '../utils/calculatorUtils';
+import { Simulation } from '../utils/simulation';
 
 @Component({
   selector: 'app-root',
@@ -55,6 +56,14 @@ export class AppComponent {
 
   optimizeSharpe(): void {
     this.calculation = CalculatorUtils.optimizeSharpe(this.performanceSeriesList);
+  }
+
+  testSimulationLogic(): void {
+    console.log('Start sim button clicked');
+    const weights: number[] = [0, 1];
+    const sim = new Simulation(weights, this.performanceSeriesList);
+    const result = sim.startSimulation();
+    console.log('Result of simulation: ' + JSON.stringify(result));
   }
 
   getTestRequest(): void {
