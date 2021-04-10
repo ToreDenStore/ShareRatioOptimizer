@@ -13,6 +13,9 @@ import { Simulation } from '../utils/simulation';
 })
 export class AppComponent {
 
+  // TODO: Handle limit of max 5 api calls per second
+  // TODO: Only make new API call for newly added ticker codes
+
   constructor(
     private historicalPriceService: HistoricalPriceService
   ) { }
