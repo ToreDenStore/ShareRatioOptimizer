@@ -60,10 +60,11 @@ export class AppComponent {
 
   testSimulationLogic(): void {
     console.log('Start sim button clicked');
-    const weights: number[] = [0, 1];
+    const weights: number[] = [0.001, 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 100, 1000];
     const sim = new Simulation(weights, this.performanceSeriesList);
     const result = sim.startSimulation();
-    console.log('Result of simulation: ' + JSON.stringify(result));
+    // console.log('Result of simulation: ' + JSON.stringify(result));
+    console.log('Number of simulations completed: ' + result.length);
   }
 
   getTestRequest(): void {
