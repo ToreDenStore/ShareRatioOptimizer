@@ -16,10 +16,6 @@ export class AppComponent {
   // TODO: Handle limit of max 5 api calls per second
   // TODO: Only make new API call for newly added ticker codes
 
-  constructor(
-    private historicalPriceService: HistoricalPriceService
-  ) { }
-
   // Constants
   private fromDate = new Date('2020-01-01');
   private toDate = new Date('2020-12-31');
@@ -32,12 +28,17 @@ export class AppComponent {
   // GUI elements
   public tickerSymbols: string[] = [];
 
+  constructor(
+    private historicalPriceService: HistoricalPriceService
+  ) { }
+
   ngOnInit(): void {
+    this.performanceSeriesList = [];
   }
 
-  change(): void {
-    console.log('Current model is ' + JSON.stringify(this.tickerSymbols));
-  }
+  // change(): void {
+  //   console.log('Current model is ' + JSON.stringify(this.tickerSymbols));
+  // }
 
   makePortfolioCalculation(): void {
     const holdings: PortfolioHolding[] = [];
@@ -72,15 +73,56 @@ export class AppComponent {
   }
 
   getTestRequest(): void {
+    // console.log('Current model is ' + JSON.stringify(this.tickerSymbols));
+    let loadedTickers = [];
+    this.performanceSeriesList.forEach(series => {
+      loadedTickers.push(series.ticker);
+    });
+    // console.log('Current loaded series are ' + JSON.stringify(loadedTickers));
+    
     // this.data = [];
-    this.performanceSeriesList = [];
+    // this.performanceSeriesList = [];
     this.calculation = null;
 
-    this.tickerSymbols.forEach(symbol => {
+    // Remove from performance series those that are no longer present
+    for (let index = 0; index < this.performanceSeriesList.length; index++) {
+      const series = this.performanceSeriesList[index];
+      // console.log('Trying to find ' + series.ticker + ' in ' + JSON.stringify(this.tickerSymbols));
+      const isInTickerList = this.tickerSymbols.find(ticker => {
+        return ticker === series.ticker;
+      });
+      if (isInTickerList === undefined) {
+        // console.log('Did not find ' + series.ticker);
+        
+        this.performanceSeriesList.splice(index, 1);
+      }
+    }
+
+    loadedTickers = [];
+    this.performanceSeriesList.forEach(series => {
+      loadedTickers.push(series.ticker);
+    });
+    // console.log('After splicing: ' + JSON.stringify(loadedTickers));
+
+    // Create an array of new ticker symbols
+    const tickerSymbolsNew = [];
+    this.tickerSymbols.forEach(ticker => {
+      const isInSeriesList = this.performanceSeriesList.find(x => {
+        return x.ticker === ticker;
+      });
+      if (isInSeriesList === undefined) {
+        tickerSymbolsNew.push(ticker);
+      }
+    });
+
+    console.log('Tickers to ask for ' + JSON.stringify(tickerSymbolsNew));
+
+    tickerSymbolsNew.forEach(symbol => {
       const performanceSeries = new PerformanceSeries();
       performanceSeries.dateFrom = this.fromDate;
       performanceSeries.dateTo = this.toDate;
       performanceSeries.ticker = symbol;
+      this.performanceSeriesList.push(performanceSeries);
 
       console.log('Symbol: ' + symbol);
       this.historicalPriceService.getHistoricalData(this.fromDate, this.toDate, symbol).subscribe(
@@ -115,7 +157,7 @@ export class AppComponent {
             performanceSeries.return = filteredList[0].close / filteredList[filteredList.length - 1].close - 1;
             performanceSeries.stDev = std(performancesNumbers) * Math.sqrt(performancesNumbers.length);
             performanceSeries.sharpeRatio = performanceSeries.return / performanceSeries.stDev;
-            this.performanceSeriesList.push(performanceSeries);
+            // this.performanceSeriesList.push(performanceSeries);
 
             console.log('Return: ' + performanceSeries.return);
             console.log('Annualized volatility: ' + performanceSeries.stDev);
