@@ -27,8 +27,11 @@ export class AppComponent implements OnInit {
   calculationMaxSharpe: PortfolioCalculation;
   calculationMinStdev: PortfolioCalculation;
 
+  // Control elements
+  symbolsLoading = 0;
+
   // GUI elements
-  public tickerSymbols: string[] = [];
+  tickerSymbols: string[] = [];
 
   constructor(
     private historicalPriceService: HistoricalPriceService
@@ -107,8 +110,10 @@ export class AppComponent implements OnInit {
       this.performanceSeriesList.push(performanceSeries);
 
       console.log('Symbol: ' + symbol);
+      this.symbolsLoading++;
       this.historicalPriceService.getHistoricalData(this.fromDate, this.toDate, symbol).subscribe(
         response => {
+          this.symbolsLoading--;
           console.log('Response received for symbol ' + symbol + '.');
           // console.log('Response: ' + JSON.stringify(response));
 
@@ -150,6 +155,7 @@ export class AppComponent implements OnInit {
           // this.response = 'Response: ' + JSON.stringify(response);
         }
         , error => {
+          this.symbolsLoading--;
           console.log('Error: ' + JSON.stringify(error));
         }
 

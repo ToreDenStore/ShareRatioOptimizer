@@ -21,10 +21,12 @@
   </tr>
   </tbody>
 </table>
-<button class="btn btn-primary" (click)="makePortfolioCalculation()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
+<button class="btn btn-primary" (click)="makePortfolioCalculation()"
+  [disabled]="symbolsLoading > 0" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
   Calculate evenly spread portfolio
 </button>
-<button class="btn btn-primary" (click)="testSimulationLogic()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
+<button class="btn btn-primary" (click)="testSimulationLogic()"
+  [disabled]="symbolsLoading > 0" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
   Find optimized portfolio
 </button>
 <div *ngIf="calculation">
