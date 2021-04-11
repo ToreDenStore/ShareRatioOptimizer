@@ -3,13 +3,7 @@
   maxItems="4">
 </tag-input>
 
-<button (click)="makePortfolioCalculation()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
-  Calculate evenly spread portfolio
-</button>
-<button (click)="testSimulationLogic()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
-  Find optimized portfolio
-</button>
-<table class="table table-striped">
+<table class="table table-striped" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
   <thead>
   <tr>
     <th scope="col">Ticker symbol</th>
@@ -27,13 +21,12 @@
   </tr>
   </tbody>
 </table>
-<!-- response:
-<div *ngFor="let performanceSeries of performanceSeriesList">
-  <h3>{{performanceSeries.ticker}}: {{performanceSeries.dateFrom | date}} - {{performanceSeries.dateTo | date}}</h3>
-  <p>Return: {{performanceSeries.return | percent:'.2'}}</p>
-  <p>StDev: {{performanceSeries.stDev | percent:'.2'}}</p>
-  <p>Sharpe: {{performanceSeries.sharpeRatio | number: '.3'}}</p>
-</div> -->
+<button class="btn btn-primary" (click)="makePortfolioCalculation()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
+  Calculate evenly spread portfolio
+</button>
+<button class="btn btn-primary" (click)="testSimulationLogic()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
+  Find optimized portfolio
+</button>
 <div *ngIf="calculation">
   <h3>Calculation:</h3>
   <p>Return: {{calculation.performance| percent:'.2'}}</p>
