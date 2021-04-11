@@ -6,7 +6,7 @@ export class Simulation {
 
     private simulationNumber: number;
     private loopStopper = 0;
-    private weights = [0.001, 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 100, 1000];
+    private weights = [0.001, 1, 2, 3, 5, 10, 20, 50, 1000];
 
     private listOfSeries: PerformanceSeries[];
 
