@@ -1,28 +1,35 @@
 import { PerformanceSeries } from '../models/performance-series';
+import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
+import { CalculatorUtils } from './calculatorUtils';
 
 export class Simulation {
 
-    // private simulationNumber: number;
+    private simulationNumber: number;
     private loopStopper = 0;
     // private loopMax = 10000;
+    private weights = [0.001, 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 100, 1000];
 
-    private weights: number[];
+    // private weights: number[];
     private listOfSeries: PerformanceSeries[];
 
     data: number[];
-    result: number[][];
+    // result: number[][];
+    // maxSharpe: number;
+    // minStdev: number;
+    maxSharpeCalculation: PortfolioCalculation;
+    minStdevCalculation: PortfolioCalculation;
 
-    public constructor(weights: number[], listOfSeries: PerformanceSeries[]) {
-        console.log('Constructing simulation object');
-        this.weights = weights;
+    public constructor(listOfSeries: PerformanceSeries[]) {
+        // console.log('Constructing simulation object');
+        // this.weights = weights;
         this.listOfSeries = listOfSeries;
     }
 
-    public startSimulation(): number[][] {
+    public startSimulation(): PortfolioCalculation {
         console.log('Starting simulation with input: ' + JSON.stringify(this.weights));
         this.data = [this.listOfSeries.length];
-        this.result = [];
-        // this.simulationNumber = 0;
+        // this.result = [];
+        this.simulationNumber = 0;
 
         const t0 = performance.now();
 
@@ -30,35 +37,58 @@ export class Simulation {
 
         const t1 = performance.now();
         console.log('recursiveRun took ' + (t1 - t0) + ' milliseconds.');
+        console.log('Number of simulations completed: ' + this.simulationNumber);
+        console.log('Average simulation time: ' + (t1 - t0) / this.simulationNumber + ' milliseconds.');
 
-        return this.result;
+        return this.maxSharpeCalculation;
     }
 
+    // Only recursion logic
     private recursiveRun(depth: number): number[] {
-        this.loopStopper ++;
 
+        this.loopStopper ++;
         const maxLoopNumber = Math.pow(this.weights.length, this.listOfSeries.length + 1);
         if (this.loopStopper > maxLoopNumber) {
             console.log('Loop has been stopped, too many loops! Max is ' + maxLoopNumber);
             return null;
         }
 
-        for (let weight = 0; weight < this.weights.length; weight++) {
-            this.data[depth] = this.weights[weight];
-            // console.log('Depth: ' + depth);
-            // console.log('Weight: ' + weight);
+        this.weights.forEach(weight => {
+            this.data[depth] = weight;
             if (depth === this.listOfSeries.length - 1) {
-                this.result.push(this.data);
-                // this.simulationNumber++;
-                // console.log('Simulation number: ' + this.simulationNumber);
-                // console.log('Result: ' + JSON.stringify(this.result));
+                // this.result.push(this.data);
+                this.runCalculation(this.data);
                 this.data = [...this.data];
             } else {
                 this.recursiveRun(depth + 1); // go deeper
             }
-        }
+        });
 
         // console.log('Winding up');
     }
+
+    private runCalculation(holdingWeights: number[]): void {
+        this.simulationNumber++;
+        const holdings: PortfolioHolding[] = [];
+
+        for (let index = 0; index < this.listOfSeries.length; index++) {
+            const performanceSerie = this.listOfSeries[index];
+            const holding = new PortfolioHolding();
+            holding.performanceSeries = performanceSerie.performanceSeries;
+            holding.ticker = performanceSerie.ticker;
+            holding.weight = holdingWeights[index];
+            holdings.push(holding);
+        }
+
+        const calculation = CalculatorUtils.runPortfolioCalculation(holdings);
+
+        if (this.maxSharpeCalculation === undefined || calculation.sharpeRatio > this.maxSharpeCalculation.sharpeRatio) {
+            this.maxSharpeCalculation = calculation;
+        }
+        if (this.minStdevCalculation === undefined || calculation.stDev > this.minStdevCalculation.stDev) {
+            this.minStdevCalculation = calculation;
+        }
+    }
+
 
 }

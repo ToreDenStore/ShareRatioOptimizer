@@ -4,20 +4,20 @@
 
 <tag-input [(ngModel)]="tickerSymbols" (ngModelChange)="change()"
   modelAsStrings="true"
-  maxItems="5">
+  maxItems="4">
 </tag-input>
 
 <button (click)="getTestRequest()">
   Test API
 </button>
 <button (click)="makePortfolioCalculation()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
-  Make portfolio calculation
+  Calculate evenly spread portfolio
 </button>
-<button (click)="optimizeSharpe()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
+<!-- <button (click)="optimizeSharpe()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
   Find optimized portfolio
-</button>
-<button (click)="testSimulationLogic()">
-  Test simulation logic
+</button> -->
+<button (click)="testSimulationLogic()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
+  Find optimized portfolio
 </button>
 response:
 <div *ngFor="let performanceSeries of performanceSeriesList">

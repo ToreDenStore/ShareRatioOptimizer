@@ -57,17 +57,18 @@ export class AppComponent {
     // console.log('Portfolio calculation: ' + JSON.stringify(calculation));
   }
 
-  optimizeSharpe(): void {
-    this.calculation = CalculatorUtils.optimizeSharpe(this.performanceSeriesList);
-  }
+  // optimizeSharpe(): void {
+  //   this.calculation = CalculatorUtils.optimizeSharpe(this.performanceSeriesList);
+  // }
 
   testSimulationLogic(): void {
-    console.log('Start sim button clicked');
-    const weights: number[] = [0.001, 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 100, 1000];
-    const sim = new Simulation(weights, this.performanceSeriesList);
+    // console.log('Start sim button clicked');
+    // const weights: number[] = [0.001, 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 100, 1000];
+    const sim = new Simulation(this.performanceSeriesList);
     const result = sim.startSimulation();
     // console.log('Result of simulation: ' + JSON.stringify(result));
-    console.log('Number of simulations completed: ' + result.length);
+    this.calculation = result;
+    // console.log('Number of simulations completed: ' + result.length);
   }
 
   getTestRequest(): void {
