@@ -29,3 +29,20 @@ response:
     {{holding.ticker}} weight - {{holding.weight | percent:'.2'}}
   </p>
 </div>
+<div *ngIf="calculationMaxSharpe">
+  <h3>Calculation maximum Sharpe:</h3>
+  <p>Return: {{calculationMaxSharpe.performance| percent:'.2'}}</p>
+  <p>StDev: {{calculationMaxSharpe.stDev | percent:'.2'}}</p>
+  <p>Sharpe: {{calculationMaxSharpe.sharpeRatio | number: '.3'}}</p>
+  <p *ngFor="let holding of calculationMaxSharpe.holdingsData">
+    {{holding.ticker}} weight - {{holding.weight | percent:'.2'}}
+  </p>
+</div><div *ngIf="calculationMinStdev">
+  <h3>Calculation minimum volatility:</h3>
+  <p>Return: {{calculationMinStdev.performance| percent:'.2'}}</p>
+  <p>StDev: {{calculationMinStdev.stDev | percent:'.2'}}</p>
+  <p>Sharpe: {{calculationMinStdev.sharpeRatio | number: '.3'}}</p>
+  <p *ngFor="let holding of calculationMinStdev.holdingsData">
+    {{holding.ticker}} weight - {{holding.weight | percent:'.2'}}
+  </p>
+</div>

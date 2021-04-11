@@ -74,7 +74,7 @@ export class Simulation {
         if (this.maxSharpeCalculation === undefined || calculation.sharpeRatio > this.maxSharpeCalculation.sharpeRatio) {
             this.maxSharpeCalculation = calculation;
         }
-        if (this.minStdevCalculation === undefined || calculation.stDev > this.minStdevCalculation.stDev) {
+        if (this.minStdevCalculation === undefined || calculation.stDev < this.minStdevCalculation.stDev) {
             this.minStdevCalculation = calculation;
         }
     }

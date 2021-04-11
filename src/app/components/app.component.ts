@@ -24,6 +24,8 @@ export class AppComponent implements OnInit {
   // data: ApiResponseHistoricalPrice[] = [];
   performanceSeriesList: PerformanceSeries[];
   calculation: PortfolioCalculation;
+  calculationMaxSharpe: PortfolioCalculation;
+  calculationMinStdev: PortfolioCalculation;
 
   // GUI elements
   public tickerSymbols: string[] = [];
@@ -57,7 +59,8 @@ export class AppComponent implements OnInit {
   testSimulationLogic(): void {
     const sim = new Simulation(this.performanceSeriesList);
     sim.startSimulation();
-    this.calculation = sim.maxSharpeCalculation;
+    this.calculationMaxSharpe = sim.maxSharpeCalculation;
+    this.calculationMinStdev = sim.minStdevCalculation;
   }
 
   getTestRequest(): void {
@@ -69,6 +72,8 @@ export class AppComponent implements OnInit {
     // console.log('Current loaded series are ' + JSON.stringify(loadedTickers));
 
     this.calculation = null;
+    this.calculationMaxSharpe = null;
+    this.calculationMinStdev = null;
 
     // Remove from performance series those that are no longer present
     for (let index = 0; index < this.performanceSeriesList.length; index++) {
