@@ -5,6 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TagInputModule } from 'ngx-chips';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { TagInputModule } from 'ngx-chips';
     FormsModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
-    TagInputModule
+    TagInputModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]

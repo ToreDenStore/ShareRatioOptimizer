@@ -1,7 +1,3 @@
-<p>
-  request-tester works!
-</p>
-
 <tag-input [(ngModel)]="tickerSymbols" (ngModelChange)="getTestRequest()"
   modelAsStrings="true"
   maxItems="4">
@@ -13,13 +9,31 @@
 <button (click)="testSimulationLogic()" *ngIf="performanceSeriesList && performanceSeriesList.length > 0">
   Find optimized portfolio
 </button>
-response:
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th scope="col">Ticker symbol</th>
+    <th scope="col">Return</th>
+    <th scope="col">Standard deviation</th>
+    <th scope="col">Sharpe ratio</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let series of performanceSeriesList;">
+    <td>{{ series.ticker }}</td>
+    <td>{{ series.return | percent:'.2'}}</td>
+    <td>{{ series.stDev | percent:'.2'}}</td>
+    <td>{{ series.sharpeRatio | number: '.3'}}</td>
+  </tr>
+  </tbody>
+</table>
+<!-- response:
 <div *ngFor="let performanceSeries of performanceSeriesList">
   <h3>{{performanceSeries.ticker}}: {{performanceSeries.dateFrom | date}} - {{performanceSeries.dateTo | date}}</h3>
   <p>Return: {{performanceSeries.return | percent:'.2'}}</p>
   <p>StDev: {{performanceSeries.stDev | percent:'.2'}}</p>
   <p>Sharpe: {{performanceSeries.sharpeRatio | number: '.3'}}</p>
-</div>
+</div> -->
 <div *ngIf="calculation">
   <h3>Calculation:</h3>
   <p>Return: {{calculation.performance| percent:'.2'}}</p>
