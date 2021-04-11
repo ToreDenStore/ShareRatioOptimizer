@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PerformancePoint, PerformanceSeries } from '../models/performance-series';
 import { HistoricalPriceService } from '../services/historical-price.service';
 import { std } from 'mathjs';
@@ -11,10 +11,10 @@ import { Simulation } from '../utils/simulation';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
   // TODO: Handle limit of max 5 api calls per second
-  // TODO: Only make new API call for newly added ticker codes
+  // TODO: Save loaded data into memory to avoid more API or database calls
 
   // Constants
   private fromDate = new Date('2020-01-01');
@@ -36,10 +36,6 @@ export class AppComponent {
     this.performanceSeriesList = [];
   }
 
-  // change(): void {
-  //   console.log('Current model is ' + JSON.stringify(this.tickerSymbols));
-  // }
-
   makePortfolioCalculation(): void {
     const holdings: PortfolioHolding[] = [];
 
@@ -58,51 +54,32 @@ export class AppComponent {
     // console.log('Portfolio calculation: ' + JSON.stringify(calculation));
   }
 
-  // optimizeSharpe(): void {
-  //   this.calculation = CalculatorUtils.optimizeSharpe(this.performanceSeriesList);
-  // }
-
   testSimulationLogic(): void {
-    // console.log('Start sim button clicked');
-    // const weights: number[] = [0.001, 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 100, 1000];
     const sim = new Simulation(this.performanceSeriesList);
-    const result = sim.startSimulation();
-    // console.log('Result of simulation: ' + JSON.stringify(result));
-    this.calculation = result;
-    // console.log('Number of simulations completed: ' + result.length);
+    sim.startSimulation();
+    this.calculation = sim.maxSharpeCalculation;
   }
 
   getTestRequest(): void {
     // console.log('Current model is ' + JSON.stringify(this.tickerSymbols));
-    let loadedTickers = [];
+    const loadedTickers = [];
     this.performanceSeriesList.forEach(series => {
       loadedTickers.push(series.ticker);
     });
     // console.log('Current loaded series are ' + JSON.stringify(loadedTickers));
-    
-    // this.data = [];
-    // this.performanceSeriesList = [];
+
     this.calculation = null;
 
     // Remove from performance series those that are no longer present
     for (let index = 0; index < this.performanceSeriesList.length; index++) {
       const series = this.performanceSeriesList[index];
-      // console.log('Trying to find ' + series.ticker + ' in ' + JSON.stringify(this.tickerSymbols));
       const isInTickerList = this.tickerSymbols.find(ticker => {
         return ticker === series.ticker;
       });
       if (isInTickerList === undefined) {
-        // console.log('Did not find ' + series.ticker);
-        
         this.performanceSeriesList.splice(index, 1);
       }
     }
-
-    loadedTickers = [];
-    this.performanceSeriesList.forEach(series => {
-      loadedTickers.push(series.ticker);
-    });
-    // console.log('After splicing: ' + JSON.stringify(loadedTickers));
 
     // Create an array of new ticker symbols
     const tickerSymbolsNew = [];

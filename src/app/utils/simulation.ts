@@ -6,35 +6,25 @@ export class Simulation {
 
     private simulationNumber: number;
     private loopStopper = 0;
-    // private loopMax = 10000;
     private weights = [0.001, 0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 100, 1000];
 
-    // private weights: number[];
     private listOfSeries: PerformanceSeries[];
 
     data: number[];
-    // result: number[][];
-    // maxSharpe: number;
-    // minStdev: number;
     maxSharpeCalculation: PortfolioCalculation;
     minStdevCalculation: PortfolioCalculation;
 
     public constructor(listOfSeries: PerformanceSeries[]) {
-        // console.log('Constructing simulation object');
-        // this.weights = weights;
         this.listOfSeries = listOfSeries;
     }
 
     public startSimulation(): PortfolioCalculation {
         console.log('Starting simulation with input: ' + JSON.stringify(this.weights));
         this.data = [this.listOfSeries.length];
-        // this.result = [];
+
         this.simulationNumber = 0;
-
         const t0 = performance.now();
-
         this.recursiveRun(0);
-
         const t1 = performance.now();
         console.log('recursiveRun took ' + (t1 - t0) + ' milliseconds.');
         console.log('Number of simulations completed: ' + this.simulationNumber);
@@ -56,7 +46,6 @@ export class Simulation {
         this.weights.forEach(weight => {
             this.data[depth] = weight;
             if (depth === this.listOfSeries.length - 1) {
-                // this.result.push(this.data);
                 this.runCalculation(this.data);
                 this.data = [...this.data];
             } else {
