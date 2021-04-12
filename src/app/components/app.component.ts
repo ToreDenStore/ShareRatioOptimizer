@@ -41,6 +41,32 @@ export class AppComponent implements OnInit {
     this.performanceSeriesList = [];
   }
 
+  getCalculations(): {name: string, calc: PortfolioCalculation}[] {
+    const calculations = [];
+    if (this.calculation !== undefined && this.calculation !== null) {
+      const obj = {
+        name: 'Evenly weighted',
+        calc: this.calculation
+      };
+      calculations.push(obj);
+    }
+    if (this.calculationMaxSharpe !== undefined && this.calculationMaxSharpe !== null) {
+      const obj = {
+        name: 'Max Sharpe',
+        calc: this.calculationMaxSharpe
+      };
+      calculations.push(obj);
+    }
+    if (this.calculationMinStdev !== undefined && this.calculationMinStdev !== null) {
+      const obj = {
+        name: 'Min Volatility',
+        calc: this.calculationMinStdev
+      };
+      calculations.push(obj);
+    }
+    return calculations;
+  }
+
   makePortfolioCalculation(): void {
     const holdings: PortfolioHolding[] = [];
 
@@ -55,8 +81,6 @@ export class AppComponent implements OnInit {
     const calculation = CalculatorUtils.runPortfolioCalculation(holdings);
 
     this.calculation = calculation;
-
-    // console.log('Portfolio calculation: ' + JSON.stringify(calculation));
   }
 
   testSimulationLogic(): void {
