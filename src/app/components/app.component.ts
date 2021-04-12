@@ -15,6 +15,7 @@ export class AppComponent implements OnInit {
 
   // TODO: Handle limit of max 5 api calls per second
   // TODO: Save loaded data into memory to avoid more API or database calls
+  // TODO: Make one table for all data, make model for this also, also sortable table
 
   // Constants
   private fromDate = new Date('2020-01-01');
@@ -67,7 +68,7 @@ export class AppComponent implements OnInit {
     return calculations;
   }
 
-  makePortfolioCalculation(): void {
+  makePortfolioCalculations(): void {
     const holdings: PortfolioHolding[] = [];
 
     this.performanceSeriesList.forEach(performanceSerie => {
@@ -81,6 +82,8 @@ export class AppComponent implements OnInit {
     const calculation = CalculatorUtils.runPortfolioCalculation(holdings);
 
     this.calculation = calculation;
+
+    this.testSimulationLogic();
   }
 
   testSimulationLogic(): void {
