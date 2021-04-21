@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "sharpe-ratio-optimizer": {
+      "hosting": {
+        "SharpeRatioOptimizer": [
+          "sharpe-ratio-optimizer"
+        ]
+      }
+    }
+  }
+}
