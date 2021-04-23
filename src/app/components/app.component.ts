@@ -1,3 +1,4 @@
+import { PerformanceWrapperService } from './../services/performance-wrapper.service';
 import { FirebasePerformanceService } from './../services/firebase-performance.service';
 import { Component, OnInit } from '@angular/core';
 import { PerformancePoint, PerformanceSeries } from '../models/performance-series';
@@ -37,7 +38,8 @@ export class AppComponent implements OnInit {
 
   constructor(
     private historicalPriceService: HistoricalPriceService,
-    private firebasePerformanceService: FirebasePerformanceService
+    private firebasePerformanceService: FirebasePerformanceService,
+    private performanceWrapperService: PerformanceWrapperService
   ) { }
 
   ngOnInit(): void {
@@ -132,6 +134,9 @@ export class AppComponent implements OnInit {
     console.log('Tickers to ask for ' + JSON.stringify(tickerSymbolsNew));
 
     tickerSymbolsNew.forEach(symbol => {
+      this.performanceWrapperService.getPerformance(symbol, this.fromDate, this.toDate);
+      return;
+
       const performanceSeries = new PerformanceSeries();
       performanceSeries.dateFrom = this.fromDate;
       performanceSeries.dateTo = this.toDate;
