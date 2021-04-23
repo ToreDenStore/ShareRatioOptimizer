@@ -1,3 +1,4 @@
+import { FirebasePerformanceService } from './../services/firebase-performance.service';
 import { Component, OnInit } from '@angular/core';
 import { PerformancePoint, PerformanceSeries } from '../models/performance-series';
 import { HistoricalPriceService } from '../services/historical-price.service';
@@ -35,7 +36,8 @@ export class AppComponent implements OnInit {
   tickerSymbols: string[] = [];
 
   constructor(
-    private historicalPriceService: HistoricalPriceService
+    private historicalPriceService: HistoricalPriceService,
+    private firebasePerformanceService: FirebasePerformanceService
   ) { }
 
   ngOnInit(): void {
@@ -166,6 +168,13 @@ export class AppComponent implements OnInit {
 
             // console.log('Performance series: ' + JSON.stringify(performances));
             performanceSeries.performanceSeries = performances;
+
+            console.log('Adding entry to db');
+            this.firebasePerformanceService.addPerformance(performanceSeries).then(dbResponse => {
+              console.log('Promise resolved, new id is: ' + JSON.stringify(dbResponse.id));
+            }).catch(message => {
+              console.log('Error caught: ' + JSON.stringify(message));
+            });
 
             // performanceSeries.stDev = std(performancesNumbers);
             performanceSeries.return = filteredList[0].close / filteredList[filteredList.length - 1].close - 1;
