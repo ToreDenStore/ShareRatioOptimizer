@@ -1,9 +1,8 @@
 import { ModelConverter } from './../utils/modelDbConverter';
-import { PerformanceSeriesDb } from './../models/performance-series-db';
 import { FirebasePerformanceService } from './firebase-performance.service';
 import { Injectable } from '@angular/core';
 import { HistoricalPriceService } from './historical-price.service';
-import { PerformancePoint, PerformanceSeries } from '../models/performance-series';
+import { PerformanceSeries } from '../models/performance-series';
 import { Observable } from 'rxjs';
 
 @Injectable({
