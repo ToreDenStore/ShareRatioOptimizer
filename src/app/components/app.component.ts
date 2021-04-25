@@ -137,13 +137,13 @@ export class AppComponent implements OnInit {
       this.symbolsLoading++;
       this.performanceWrapperService.getPerformance(symbol, this.fromDate, this.toDate).subscribe(performanceSeries => {
         this.symbolsLoading--;
-        console.log('Observable response received for ticker ' + performanceSeries.ticker);
+        console.log('Component observable response received for ticker ' + performanceSeries.ticker);
         if (performanceSeries !== null) {
           this.performanceSeriesList.push(performanceSeries);
         }
       }, error => {
         this.symbolsLoading--;
-        console.log('Error: ' + JSON.stringify(error));
+        console.log('Error from component observable: ' + JSON.stringify(error));
       });
     });
 
