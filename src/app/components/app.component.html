@@ -1,5 +1,8 @@
 <div class="middleOfScreen" style="max-width: 800px;">
-  <tag-input [(ngModel)]="tickerSymbols" (ngModelChange)="getTestRequest()" modelAsStrings="true" maxItems="4">
+  <tag-input [(ngModel)]="tickerSymbols" (ngModelChange)="getTestRequest()" modelAsStrings="true" maxItems="4"
+    placeholder="Enter a new ticker symbol"
+    secondaryPlaceholder="Enter a ticker symbol"
+  >
   </tag-input>
   <button class="btn btn-primary" (click)="makePortfolioCalculations()"
     [disabled]="symbolsLoading > 0 || !performanceSeriesList || performanceSeriesList.length <= 0">
