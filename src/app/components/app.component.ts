@@ -1,7 +1,6 @@
+import { PerformanceWrapperService } from './../services/performance-wrapper.service';
 import { Component, OnInit } from '@angular/core';
-import { PerformancePoint, PerformanceSeries } from '../models/performance-series';
-import { HistoricalPriceService } from '../services/historical-price.service';
-import { std } from 'mathjs';
+import { PerformanceSeries } from '../models/performance-series';
 import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
 import { CalculatorUtils } from '../utils/calculatorUtils';
 import { Simulation } from '../utils/simulation';
@@ -14,15 +13,13 @@ import { Simulation } from '../utils/simulation';
 export class AppComponent implements OnInit {
 
   // TODO: Handle limit of max 5 api calls per second
-  // TODO: Save loaded data into memory to avoid more API or database calls
+  // TODO: Save all loaded data into memory to avoid more API or database calls
   // TODO: Make one table for all data, make model for this also, also sortable table
 
   // Constants
   private fromDate = new Date('2020-01-01');
   private toDate = new Date('2020-12-31');
 
-  // response: string;
-  // data: ApiResponseHistoricalPrice[] = [];
   performanceSeriesList: PerformanceSeries[];
   calculation: PortfolioCalculation;
   calculationMaxSharpe: PortfolioCalculation;
@@ -35,7 +32,7 @@ export class AppComponent implements OnInit {
   tickerSymbols: string[] = [];
 
   constructor(
-    private historicalPriceService: HistoricalPriceService
+    private performanceWrapperService: PerformanceWrapperService
   ) { }
 
   ngOnInit(): void {
@@ -44,6 +41,31 @@ export class AppComponent implements OnInit {
 
   getCalculations(): {name: string, calc: PortfolioCalculation}[] {
     const calculations = [];
+    let index = 0;
+    this.performanceSeriesList.forEach(series => {
+      const calc = new PortfolioCalculation();
+      calc.sharpeRatio = series.sharpeRatio;
+      calc.stDev = series.stDev;
+      calc.performance = series.return;
+      calc.holdingsData = [];
+      for (let i = 0; i < this.performanceSeriesList.length; i++) {
+        const element = this.performanceSeriesList[i];
+        const holding = new PortfolioHolding();
+        holding.ticker = element.ticker;
+        if (i === index) {
+          holding.weight = 1;
+        } else {
+          holding.weight = 0;
+        }
+        calc.holdingsData.push(holding);
+      }
+      const obj = {
+        name: series.ticker,
+        calc
+      };
+      calculations.push(obj);
+      index++;
+    });
     if (this.calculation !== undefined && this.calculation !== null) {
       const obj = {
         name: 'Evenly weighted',
@@ -60,7 +82,7 @@ export class AppComponent implements OnInit {
     }
     if (this.calculationMinStdev !== undefined && this.calculationMinStdev !== null) {
       const obj = {
-        name: 'Min Volatility',
+        name: 'Min volatility',
         calc: this.calculationMinStdev
       };
       calculations.push(obj);
@@ -130,63 +152,23 @@ export class AppComponent implements OnInit {
     console.log('Tickers to ask for ' + JSON.stringify(tickerSymbolsNew));
 
     tickerSymbolsNew.forEach(symbol => {
-      const performanceSeries = new PerformanceSeries();
-      performanceSeries.dateFrom = this.fromDate;
-      performanceSeries.dateTo = this.toDate;
-      performanceSeries.ticker = symbol;
-      this.performanceSeriesList.push(performanceSeries);
-
-      console.log('Symbol: ' + symbol);
       this.symbolsLoading++;
-      this.historicalPriceService.getHistoricalData(this.fromDate, this.toDate, symbol).subscribe(
-        response => {
-          this.symbolsLoading--;
-          console.log('Response received for symbol ' + symbol + '.');
-          // console.log('Response: ' + JSON.stringify(response));
-
-          if (response != null) {
-
-            const filteredList = response.prices.filter(x => {
-              return x.type == null;
-            });
-
-            // console.log('Filtered list: ' + JSON.stringify(filteredList));
-            const performances: PerformancePoint[] = [];
-            const performancesNumbers: number[] = [];
-
-            // List is sorted by latest date first
-            for (let index = 0; index < filteredList.length - 1; index++) {
-              const price = filteredList[index];
-              const performancePoint: PerformancePoint = new PerformancePoint();
-              performancePoint.date = new Date(price.date * 1000);
-              performancePoint.performance = price.close / filteredList[index + 1].close - 1;
-              performances.push(performancePoint);
-              performancesNumbers.push(performancePoint.performance);
-            }
-
-            // console.log('Performance series: ' + JSON.stringify(performances));
-            performanceSeries.performanceSeries = performances;
-
-            // performanceSeries.stDev = std(performancesNumbers);
-            performanceSeries.return = filteredList[0].close / filteredList[filteredList.length - 1].close - 1;
-            performanceSeries.stDev = std(performancesNumbers) * Math.sqrt(performancesNumbers.length);
-            performanceSeries.sharpeRatio = performanceSeries.return / performanceSeries.stDev;
-            // this.performanceSeriesList.push(performanceSeries);
-
-            console.log('Return: ' + performanceSeries.return);
-            console.log('Annualized volatility: ' + performanceSeries.stDev);
-            console.log('Sharpe: ' + performanceSeries.sharpeRatio);
-            console.log('End close: ' + filteredList[0].close);
-            console.log('Start close: ' + filteredList[filteredList.length - 1].close);
-          }
-          // this.response = 'Response: ' + JSON.stringify(response);
+      this.performanceWrapperService.getPerformance(symbol, this.fromDate, this.toDate).subscribe(performanceSeries => {
+        this.symbolsLoading--;
+        console.log('Component observable response received for ticker ' + performanceSeries.ticker);
+        if (performanceSeries !== null) {
+          this.performanceSeriesList.push(performanceSeries);
         }
-        , error => {
-          this.symbolsLoading--;
-          console.log('Error: ' + JSON.stringify(error));
-        }
-
-      );
+      }, error => {
+        this.symbolsLoading--;
+        const tickerIndex = this.tickerSymbols.findIndex(x => {
+          return x === symbol;
+        });
+        this.tickerSymbols.splice(tickerIndex, 1);
+        alert('Error from component observable: ' + JSON.stringify(error));
+      });
     });
+
+    return;
   }
 }
