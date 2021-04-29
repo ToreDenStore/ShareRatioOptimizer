@@ -41,6 +41,31 @@ export class AppComponent implements OnInit {
 
   getCalculations(): {name: string, calc: PortfolioCalculation}[] {
     const calculations = [];
+    let index = 0;
+    this.performanceSeriesList.forEach(series => {
+      const calc = new PortfolioCalculation();
+      calc.sharpeRatio = series.sharpeRatio;
+      calc.stDev = series.stDev;
+      calc.performance = series.return;
+      calc.holdingsData = [];
+      for (let i = 0; i < this.performanceSeriesList.length; i++) {
+        const element = this.performanceSeriesList[i];
+        const holding = new PortfolioHolding();
+        holding.ticker = element.ticker;
+        if (i === index) {
+          holding.weight = 1;
+        } else {
+          holding.weight = 0;
+        }
+        calc.holdingsData.push(holding);
+      }
+      const obj = {
+        name: series.ticker,
+        calc
+      };
+      calculations.push(obj);
+      index++;
+    });
     if (this.calculation !== undefined && this.calculation !== null) {
       const obj = {
         name: 'Evenly weighted',
@@ -57,7 +82,7 @@ export class AppComponent implements OnInit {
     }
     if (this.calculationMinStdev !== undefined && this.calculationMinStdev !== null) {
       const obj = {
-        name: 'Min Volatility',
+        name: 'Min volatility',
         calc: this.calculationMinStdev
       };
       calculations.push(obj);
