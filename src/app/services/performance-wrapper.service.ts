@@ -40,7 +40,7 @@ export class PerformanceWrapperService {
               apiResponse => {
                 console.log('Response from API received for symbol ' + ticker + '.');
                 // console.log('Response from API received for symbol ' + ticker + ': ' + JSON.stringify(apiResponse));
-                if (apiResponse != null) {
+                if (apiResponse != null && apiResponse.prices.length > 0) {
                   const performanceSeries = ModelConverter.historicPricesToPerformance(ticker, dateFrom, dateTo, apiResponse);
                   observer.next(performanceSeries);
                   observer.complete();
@@ -50,6 +50,9 @@ export class PerformanceWrapperService {
                   }).catch(message => {
                     console.log('Error caught when adding to db: ' + JSON.stringify(message));
                   });
+                } else {
+                  // console.log(JSON.stringify(apiResponse));
+                  observer.error('Invalid ticker code | no prices found for 2020 for ticker code ' + ticker);
                 }
               },
               error => {

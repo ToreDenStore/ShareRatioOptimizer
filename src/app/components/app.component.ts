@@ -161,7 +161,11 @@ export class AppComponent implements OnInit {
         }
       }, error => {
         this.symbolsLoading--;
-        console.log('Error from component observable: ' + JSON.stringify(error));
+        const tickerIndex = this.tickerSymbols.findIndex(x => {
+          return x === symbol;
+        });
+        this.tickerSymbols.splice(tickerIndex, 1);
+        alert('Error from component observable: ' + JSON.stringify(error));
       });
     });
 
