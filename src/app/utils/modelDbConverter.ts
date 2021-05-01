@@ -7,7 +7,7 @@ export class ModelConverter {
 
     public static convertToDbModel(guiModel: PerformanceSeries): PerformanceSeriesDb {
         const dbModel = new PerformanceSeriesDb();
-        dbModel.ticker = guiModel.ticker;
+        dbModel.ticker = guiModel.ticker.toUpperCase();
         dbModel.dateFrom = guiModel.dateFrom.getTime();
         dbModel.dateTo = guiModel.dateTo.getTime();
         dbModel.performanceSeries = [];
@@ -26,7 +26,7 @@ export class ModelConverter {
         const guiModel = new PerformanceSeries();
         guiModel.dateFrom = new Date(dbModel.dateFrom);
         guiModel.dateTo = new Date(dbModel.dateTo);
-        guiModel.ticker = dbModel.ticker;
+        guiModel.ticker = dbModel.ticker.toUpperCase();
         guiModel.performanceSeries = [];
         const performanceSeriesNumbers = [];
         dbModel.performanceSeries.forEach(dbElement => {

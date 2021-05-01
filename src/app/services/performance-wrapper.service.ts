@@ -22,11 +22,12 @@ export class PerformanceWrapperService {
     3: Add data from API to db
   */
   getPerformance(ticker: string, dateFrom: Date, dateTo: Date): Observable<PerformanceSeries> {
+    ticker = ticker.toUpperCase();
     const observable = new Observable<PerformanceSeries>(observer => {
       // 1: Check if data exist in db
       const dbSub = this.firebasePerformanceService.getPerformance(ticker).subscribe(
         dbGetResponse => {
-          console.log('Response received from DB');
+          console.log('Response received from DB with length ' + dbGetResponse.length);
           if (dbGetResponse.length === 1) {
             console.log('Found ticker in db');
             observer.next(ModelConverter.convertToGUIModel(dbGetResponse[0]));
