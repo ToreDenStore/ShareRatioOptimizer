@@ -120,14 +120,16 @@ export class AppComponent implements OnInit {
     this.calculationMinStdev = sim.minStdevCalculation;
 
     if (this.performanceSeriesList.length === 2) {
+      this.linePlotData.push(sim.linePlotObject);
+    }
+    if (this.performanceSeriesList.length === 3) {
       const plotDataObject = {
         z: sim.surfacePlotData,
         type: 'surface'
       };
       this.surfacePlotData.push(plotDataObject);
-      this.linePlotData.push(sim.linePlotObject);
+      // console.log('Plot data: ' + JSON.stringify(plotDataObject));
     }
-    // console.log('Plot data: ' + JSON.stringify(sim.linePlotObject));
   }
 
   getTestRequest(): void {

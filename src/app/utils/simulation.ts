@@ -6,7 +6,7 @@ export class Simulation {
 
     private simulationNumber: number;
     private loopStopper = 0;
-    private weights = [0.001, 1, 2, 3, 4, 5, 6, 7, 9, 10, 15, 20, 50];
+    private weights = [0.001, 1, 2, 3, 4, 5, 6, 7, 9, 10, 15, 20, 50]; // 5 is middle
 
     private listOfSeries: PerformanceSeries[];
 
@@ -105,19 +105,22 @@ export class Simulation {
             this.minStdevCalculation = calculation;
         }
 
-        // Create surface plot
+        // Create line plot
         if (this.listOfSeries.length === 2) {
-            const xIndex = this.weights.indexOf(holdingWeights[0]);
-            const yIndex = this.weights.indexOf(holdingWeights[1]);
-            this.surfacePlotData[xIndex][yIndex] = calculation.sharpeRatio;
-
             const weightRatio = holdingWeights[0] / (holdingWeights[0] + holdingWeights[1]);
-            // this.linePlotData.x[xIndex] = weightRatio;
-            // this.linePlotData.y[yIndex] = calculation.sharpeRatio;
             this.linePlotData.push({
                 x: weightRatio,
                 y: calculation.sharpeRatio
             });
+        }
+
+        // Create surface plot
+        if (this.listOfSeries.length === 3) {
+            const xIndex = this.weights.indexOf(holdingWeights[0]);
+            const yIndex = this.weights.indexOf(holdingWeights[1]);
+            if (holdingWeights[2] === 5) {
+                this.surfacePlotData[xIndex][yIndex] = calculation.sharpeRatio;
+            }
         }
     }
 
