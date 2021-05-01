@@ -49,6 +49,9 @@ export class Simulation {
 
         const xArray = [];
         const yArray = [];
+        this.linePlotData.sort((a, b) => {
+            return a.x - b.x;
+        });
         this.linePlotData.forEach(element => {
             xArray.push(element.x);
             yArray.push(element.y);
