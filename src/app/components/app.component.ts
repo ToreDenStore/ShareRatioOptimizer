@@ -134,10 +134,10 @@ export class AppComponent implements OnInit {
 
   getTestRequest(): void {
     // console.log('Current model is ' + JSON.stringify(this.tickerSymbols));
-    const loadedTickers = [];
-    this.performanceSeriesList.forEach(series => {
-      loadedTickers.push(series.ticker);
-    });
+    // const loadedTickers = [];
+    // this.performanceSeriesList.forEach(series => {
+    //   loadedTickers.push(series.ticker);
+    // });
     // console.log('Current loaded series are ' + JSON.stringify(loadedTickers));
 
     this.calculation = null;
@@ -150,7 +150,7 @@ export class AppComponent implements OnInit {
     for (let index = 0; index < this.performanceSeriesList.length; index++) {
       const series = this.performanceSeriesList[index];
       const isInTickerList = this.tickerSymbols.find(ticker => {
-        return ticker === series.ticker;
+        return ticker.toUpperCase() === series.ticker.toUpperCase();
       });
       if (isInTickerList === undefined) {
         this.performanceSeriesList.splice(index, 1);
@@ -161,7 +161,7 @@ export class AppComponent implements OnInit {
     const tickerSymbolsNew = [];
     this.tickerSymbols.forEach(ticker => {
       const isInSeriesList = this.performanceSeriesList.find(x => {
-        return x.ticker === ticker;
+        return x.ticker.toUpperCase() === ticker.toUpperCase();
       });
       if (isInSeriesList === undefined) {
         tickerSymbolsNew.push(ticker);
