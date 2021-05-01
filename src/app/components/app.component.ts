@@ -127,7 +127,7 @@ export class AppComponent implements OnInit {
       this.surfacePlotData.push(plotDataObject);
       this.linePlotData.push(sim.linePlotObject);
     }
-    console.log('Plot data: ' + JSON.stringify(sim.linePlotObject));
+    // console.log('Plot data: ' + JSON.stringify(sim.linePlotObject));
   }
 
   getTestRequest(): void {

@@ -18,7 +18,7 @@ export class Simulation {
     linePlotObject = {
         x: [],
         y: [],
-        type: 'scatter'
+        mode: 'lines+markers'
     };
     private linePlotData: {
         x: number,
