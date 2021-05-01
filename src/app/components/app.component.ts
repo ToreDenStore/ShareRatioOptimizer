@@ -110,6 +110,7 @@ export class AppComponent implements OnInit {
   }
 
   testSimulationLogic(): void {
+    this.plotData = [];
     const sim = new Simulation(this.performanceSeriesList);
     sim.startSimulation();
     this.calculationMaxSharpe = sim.maxSharpeCalculation;
@@ -133,6 +134,7 @@ export class AppComponent implements OnInit {
     this.calculation = null;
     this.calculationMaxSharpe = null;
     this.calculationMinStdev = null;
+    this.plotData = [];
 
     // Remove from performance series those that are no longer present
     for (let index = 0; index < this.performanceSeriesList.length; index++) {
