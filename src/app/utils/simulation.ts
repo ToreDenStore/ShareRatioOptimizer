@@ -23,6 +23,12 @@ export class Simulation {
         console.log('Starting simulation with input: ' + JSON.stringify(this.weights));
         this.data = [this.listOfSeries.length];
 
+        // Initialize array of plotData
+        this.plotData = new Array(this.weights.length);
+        for (let index = 0; index < this.weights.length; index++) {
+            this.plotData[index] = new Array(this.weights.length);
+        }
+
         this.simulationNumber = 0;
         const t0 = performance.now();
         this.recursiveRun(0);
@@ -79,11 +85,9 @@ export class Simulation {
 
         // Create surface plot
         if (this.listOfSeries.length === 2) {
-            const arrayElement = [];
-            holdingWeights.forEach(_ => {
-                arrayElement.push(calculation.sharpeRatio);
-            });
-            this.plotData.push(arrayElement);
+            const xIndex = this.weights.indexOf(holdingWeights[0]);
+            const yIndex = this.weights.indexOf(holdingWeights[1]);
+            this.plotData[xIndex][yIndex] = calculation.sharpeRatio;
         }
     }
 
