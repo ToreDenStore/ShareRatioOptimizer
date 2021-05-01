@@ -30,7 +30,8 @@ export class AppComponent implements OnInit {
 
   // GUI elements
   tickerSymbols: string[] = [];
-  plotData = [];
+  surfacePlotData = [];
+  linePlotData = [];
   plotLayout = { width: 800, height: 600, title: 'Sharpe Ratio by weights' };
 
   constructor(
@@ -111,17 +112,22 @@ export class AppComponent implements OnInit {
   }
 
   testSimulationLogic(): void {
-    this.plotData = [];
+    this.surfacePlotData = [];
+    this.linePlotData = [];
     const sim = new Simulation(this.performanceSeriesList);
     sim.startSimulation();
     this.calculationMaxSharpe = sim.maxSharpeCalculation;
     this.calculationMinStdev = sim.minStdevCalculation;
-    const plotDataObject = {
-      z: sim.plotData,
-      type: 'surface'
-    };
-    this.plotData.push(plotDataObject);
-    console.log('Plot data: ' + JSON.stringify(sim.plotData));
+
+    if (this.performanceSeriesList.length === 2) {
+      const plotDataObject = {
+        z: sim.surfacePlotData,
+        type: 'surface'
+      };
+      this.surfacePlotData.push(plotDataObject);
+      this.linePlotData.push(sim.linePlotObject);
+    }
+    console.log('Plot data: ' + JSON.stringify(sim.linePlotObject));
   }
 
   getTestRequest(): void {
@@ -135,7 +141,8 @@ export class AppComponent implements OnInit {
     this.calculation = null;
     this.calculationMaxSharpe = null;
     this.calculationMinStdev = null;
-    this.plotData = [];
+    this.surfacePlotData = [];
+    this.linePlotData = [];
 
     // Remove from performance series those that are no longer present
     for (let index = 0; index < this.performanceSeriesList.length; index++) {
