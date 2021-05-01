@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
 
   // GUI elements
   tickerSymbols: string[] = [];
-  plotData: number[][];
+  plotData = [];
 
   constructor(
     private performanceWrapperService: PerformanceWrapperService
@@ -114,7 +114,11 @@ export class AppComponent implements OnInit {
     sim.startSimulation();
     this.calculationMaxSharpe = sim.maxSharpeCalculation;
     this.calculationMinStdev = sim.minStdevCalculation;
-    this.plotData = sim.plotData;
+    const plotDataObject = {
+      z: sim.plotData,
+      type: 'surface'
+    };
+    this.plotData.push(plotDataObject);
     console.log('Plot data: ' + JSON.stringify(sim.plotData));
   }
 
