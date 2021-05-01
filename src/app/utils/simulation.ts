@@ -13,7 +13,17 @@ export class Simulation {
     data: number[];
     maxSharpeCalculation: PortfolioCalculation;
     minStdevCalculation: PortfolioCalculation;
-    plotData: number[][];
+
+    surfacePlotData: number[][];
+    linePlotObject = {
+        x: [],
+        y: [],
+        mode: 'lines+markers'
+    };
+    private linePlotData: {
+        x: number,
+        y: number;
+    }[] = [];
 
     public constructor(listOfSeries: PerformanceSeries[]) {
         this.listOfSeries = listOfSeries;
@@ -24,9 +34,9 @@ export class Simulation {
         this.data = [this.listOfSeries.length];
 
         // Initialize array of plotData
-        this.plotData = new Array(this.weights.length);
+        this.surfacePlotData = new Array(this.weights.length);
         for (let index = 0; index < this.weights.length; index++) {
-            this.plotData[index] = new Array(this.weights.length);
+            this.surfacePlotData[index] = new Array(this.weights.length);
         }
 
         this.simulationNumber = 0;
@@ -36,6 +46,18 @@ export class Simulation {
         console.log('recursiveRun took ' + (t1 - t0) + ' milliseconds.');
         console.log('Number of simulations completed: ' + this.simulationNumber);
         console.log('Average simulation time: ' + (t1 - t0) / this.simulationNumber + ' milliseconds.');
+
+        const xArray = [];
+        const yArray = [];
+        this.linePlotData.sort((a, b) => {
+            return a.x - b.x;
+        });
+        this.linePlotData.forEach(element => {
+            xArray.push(element.x);
+            yArray.push(element.y);
+        });
+        this.linePlotObject.x = xArray;
+        this.linePlotObject.y = yArray;
     }
 
     // Only recursion logic
@@ -87,7 +109,15 @@ export class Simulation {
         if (this.listOfSeries.length === 2) {
             const xIndex = this.weights.indexOf(holdingWeights[0]);
             const yIndex = this.weights.indexOf(holdingWeights[1]);
-            this.plotData[xIndex][yIndex] = calculation.sharpeRatio;
+            this.surfacePlotData[xIndex][yIndex] = calculation.sharpeRatio;
+
+            const weightRatio = holdingWeights[0] / (holdingWeights[0] + holdingWeights[1]);
+            // this.linePlotData.x[xIndex] = weightRatio;
+            // this.linePlotData.y[yIndex] = calculation.sharpeRatio;
+            this.linePlotData.push({
+                x: weightRatio,
+                y: calculation.sharpeRatio
+            });
         }
     }
 
