@@ -32,6 +32,6 @@
     </tbody>
   </table>
 
-  <plotly-plot [data]="plotData"></plotly-plot>
+  <plotly-plot [data]="plotData" [layout]="plotLayout" *ngIf="plotData.length > 0"></plotly-plot>
 
 </div>

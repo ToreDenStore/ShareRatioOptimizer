@@ -31,6 +31,7 @@ export class AppComponent implements OnInit {
   // GUI elements
   tickerSymbols: string[] = [];
   plotData = [];
+  plotLayout = { width: 800, height: 600, title: 'Sharpe Ratio by weights' };
 
   constructor(
     private performanceWrapperService: PerformanceWrapperService
