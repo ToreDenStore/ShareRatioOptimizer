@@ -13,12 +13,13 @@ export class Simulation {
     data: number[];
     maxSharpeCalculation: PortfolioCalculation;
     minStdevCalculation: PortfolioCalculation;
+    plotData: number[][];
 
     public constructor(listOfSeries: PerformanceSeries[]) {
         this.listOfSeries = listOfSeries;
     }
 
-    public startSimulation(): PortfolioCalculation {
+    public startSimulation(): void {
         console.log('Starting simulation with input: ' + JSON.stringify(this.weights));
         this.data = [this.listOfSeries.length];
 
@@ -29,8 +30,6 @@ export class Simulation {
         console.log('recursiveRun took ' + (t1 - t0) + ' milliseconds.');
         console.log('Number of simulations completed: ' + this.simulationNumber);
         console.log('Average simulation time: ' + (t1 - t0) / this.simulationNumber + ' milliseconds.');
-
-        return this.maxSharpeCalculation;
     }
 
     // Only recursion logic
@@ -76,6 +75,15 @@ export class Simulation {
         }
         if (this.minStdevCalculation === undefined || calculation.stDev < this.minStdevCalculation.stDev) {
             this.minStdevCalculation = calculation;
+        }
+
+        // Create surface plot
+        if (this.listOfSeries.length === 2) {
+            const arrayElement = [];
+            holdingWeights.forEach(_ => {
+                arrayElement.push(calculation.sharpeRatio);
+            });
+            this.plotData.push(arrayElement);
         }
     }
 
