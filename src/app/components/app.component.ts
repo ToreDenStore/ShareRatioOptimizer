@@ -32,7 +32,17 @@ export class AppComponent implements OnInit {
   tickerSymbols: string[] = [];
   surfacePlotData = [];
   linePlotData = [];
-  plotLayout = { width: 800, height: 600, title: 'Sharpe Ratio by weights' };
+  plotLayout = {
+    width: 800,
+    height: 600,
+    title: 'Sharpe Ratio by weights',
+    xaxis: {
+      title: 'Placeholder x axis title'
+    },
+    yaxis: {
+      title: 'Placeholder y axis title'
+    },
+  };
 
   constructor(
     private performanceWrapperService: PerformanceWrapperService
@@ -121,12 +131,16 @@ export class AppComponent implements OnInit {
 
     if (this.performanceSeriesList.length === 2) {
       this.linePlotData.push(sim.linePlotObject);
+      this.plotLayout.xaxis.title = this.calculationMaxSharpe.holdingsData[0].ticker;
+      this.plotLayout.yaxis.title = this.calculationMaxSharpe.holdingsData[1].ticker;
     }
     if (this.performanceSeriesList.length === 3) {
       const plotDataObject = {
         z: sim.surfacePlotData,
         type: 'surface'
       };
+      this.plotLayout.xaxis.title = this.calculationMaxSharpe.holdingsData[1].ticker;
+      this.plotLayout.yaxis.title = this.calculationMaxSharpe.holdingsData[0].ticker;
       this.surfacePlotData.push(plotDataObject);
       // console.log('Plot data: ' + JSON.stringify(plotDataObject));
     }
