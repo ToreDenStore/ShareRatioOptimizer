@@ -37,10 +37,23 @@ export class AppComponent implements OnInit {
     height: 600,
     title: 'Sharpe Ratio by weights',
     xaxis: {
-      title: 'Placeholder x axis title'
+      title: 'Placeholder x axis title',
     },
     yaxis: {
-      title: 'Placeholder y axis title'
+      title: 'Placeholder y axis title',
+    },
+  };
+  plotLayoutSurface = {
+    width: 800,
+    height: 600,
+    title: 'Sharpe Ratio by weights',
+    xaxis: {
+      title: 'Placeholder x axis title',
+      type: 'category'
+    },
+    yaxis: {
+      title: 'Placeholder y axis title',
+      type: 'category'
     },
   };
 
@@ -131,8 +144,8 @@ export class AppComponent implements OnInit {
 
     if (this.performanceSeriesList.length === 2) {
       this.linePlotData.push(sim.linePlotObject);
-      this.plotLayout.xaxis.title = this.calculationMaxSharpe.holdingsData[0].ticker;
-      this.plotLayout.yaxis.title = this.calculationMaxSharpe.holdingsData[1].ticker;
+      this.plotLayout.xaxis.title = this.calculationMaxSharpe.holdingsData[0].ticker + ' weights';
+      this.plotLayout.yaxis.title = this.calculationMaxSharpe.holdingsData[1].ticker + ' weights';
     }
     if (this.performanceSeriesList.length === 3) {
       const plotDataObject = {
@@ -144,10 +157,12 @@ export class AppComponent implements OnInit {
           // size: 0.01,
           coloring: 'heatmap',
           showlabels: true
-        }
+        },
+        x: sim.weights,
+        y: sim.weights
       };
-      this.plotLayout.xaxis.title = this.calculationMaxSharpe.holdingsData[1].ticker;
-      this.plotLayout.yaxis.title = this.calculationMaxSharpe.holdingsData[0].ticker;
+      this.plotLayoutSurface.xaxis.title = this.calculationMaxSharpe.holdingsData[1].ticker + ' weights';
+      this.plotLayoutSurface.yaxis.title = this.calculationMaxSharpe.holdingsData[0].ticker + ' weights';
       this.surfacePlotData.push(plotDataObject);
       // console.log('Plot data: ' + JSON.stringify(plotDataObject));
     }

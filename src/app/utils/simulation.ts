@@ -6,7 +6,7 @@ export class Simulation {
 
     private simulationNumber: number;
     private loopStopper = 0;
-    private weights = [0.001, 1, 2, 3, 4, 5, 6, 7, 9, 10, 15, 20, 50]; // 5 is middle
+    public weights = [0.001, 1, 2, 3, 4, 5, 6, 7, 9, 10, 15, 20, 50]; // 5 is middle
 
     private listOfSeries: PerformanceSeries[];
 
