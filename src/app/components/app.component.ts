@@ -137,7 +137,14 @@ export class AppComponent implements OnInit {
     if (this.performanceSeriesList.length === 3) {
       const plotDataObject = {
         z: sim.surfacePlotData,
-        type: 'surface'
+        type: 'contour',
+        contours: {
+          // start: this.calculationMaxSharpe.sharpeRatio - 1,
+          // end: this.calculationMaxSharpe.sharpeRatio,
+          // size: 0.01,
+          coloring: 'heatmap',
+          showlabels: true
+        }
       };
       this.plotLayout.xaxis.title = this.calculationMaxSharpe.holdingsData[1].ticker;
       this.plotLayout.yaxis.title = this.calculationMaxSharpe.holdingsData[0].ticker;
