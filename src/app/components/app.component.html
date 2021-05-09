@@ -2,6 +2,7 @@
   <tag-input [(ngModel)]="tickerSymbols" (ngModelChange)="getTestRequest()" modelAsStrings="true" maxItems="4"
     placeholder="Enter a new ticker symbol"
     secondaryPlaceholder="Enter a ticker symbol"
+    *ngIf="tickerSymbolsDB.length > 0"
   >
     <tag-input-dropdown
       [autocompleteItems]="tickerSymbolsDB"

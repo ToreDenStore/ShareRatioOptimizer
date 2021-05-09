@@ -78,6 +78,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   getDBTickers(): void {
     this.tickerSymbolsDBSub = this.firebasePerformanceService.getAllPerformances().subscribe(series => {
+      console.log('Received DB tickers');
       this.tickerSymbolsDB = [];
       series.forEach(serie => {
         this.tickerSymbolsDB.push(serie.ticker);
