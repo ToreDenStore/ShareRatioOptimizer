@@ -1,16 +1,19 @@
+import { PerformanceSeriesDb } from './../models/performance-series-db';
+import { FirebasePerformanceService } from './../services/firebase-performance.service';
 import { PerformanceWrapperService } from './../services/performance-wrapper.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PerformanceSeries } from '../models/performance-series';
 import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
 import { CalculatorUtils } from '../utils/calculatorUtils';
 import { Simulation } from '../utils/simulation';
+import { Subscription, Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   // TODO: Handle limit of max 5 api calls per second
   // TODO: Save all loaded data into memory to avoid more API or database calls
@@ -29,6 +32,8 @@ export class AppComponent implements OnInit {
   symbolsLoading = 0;
 
   // GUI elements
+  tickerSymbolsDB: string[] = [];
+  tickerSymbolsDBSub: Subscription;
   tickerSymbols: string[] = [];
   surfacePlotData = [];
   linePlotData = [];
@@ -58,11 +63,35 @@ export class AppComponent implements OnInit {
   };
 
   constructor(
-    private performanceWrapperService: PerformanceWrapperService
+    private performanceWrapperService: PerformanceWrapperService,
+    private firebasePerformanceService: FirebasePerformanceService
   ) { }
 
   ngOnInit(): void {
     this.performanceSeriesList = [];
+    this.getDBTickers();
+  }
+
+  ngOnDestroy(): void {
+    this.tickerSymbolsDBSub.unsubscribe();
+  }
+
+  getDBTickers(): void {
+    this.tickerSymbolsDBSub = this.firebasePerformanceService.getAllPerformances().subscribe(series => {
+      console.log('Received DB tickers');
+      this.tickerSymbolsDB = [];
+      series.forEach(serie => {
+        const hasTicker = this.tickerSymbolsDB.find(x => {
+          return x === serie.ticker.toUpperCase();
+        });
+        if (!hasTicker) {
+          this.tickerSymbolsDB.push(serie.ticker.toUpperCase());
+        }
+      });
+      this.tickerSymbolsDB.sort((a, b) => {
+        return a.localeCompare(b);
+      });
+    });
   }
 
   getCalculations(): {name: string, calc: PortfolioCalculation}[] {

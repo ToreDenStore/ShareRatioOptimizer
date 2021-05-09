@@ -30,4 +30,8 @@ export class FirebasePerformanceService {
       .valueChanges();
   }
 
+  getAllPerformances(): Observable<PerformanceSeriesDb[]> {
+    return this.firestore.collection<PerformanceSeriesDb>(this.collectionName).valueChanges();
+  }
+
 }
