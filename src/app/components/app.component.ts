@@ -6,7 +6,6 @@ import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calc
 import { CalculatorUtils } from '../utils/calculatorUtils';
 import { Simulation } from '../utils/simulation';
 import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -33,7 +32,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   // GUI elements
   tickerSymbolsDB: string[] = [];
-  $tickerSymbolsDB: Observable<string[]>;
   tickerSymbolsDBSub: Subscription;
   tickerSymbols: string[] = [];
   surfacePlotData = [];
@@ -71,34 +69,13 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.performanceSeriesList = [];
 
-    this.getDBTickers();
-    this.tickerSymbolsDBSub = this.$tickerSymbolsDB.subscribe(tickers => {
+    this.tickerSymbolsDBSub = this.firebasePerformanceService.getAllTickers().subscribe(tickers => {
       this.tickerSymbolsDB = tickers;
     });
   }
 
   ngOnDestroy(): void {
     this.tickerSymbolsDBSub.unsubscribe();
-  }
-
-  getDBTickers(): void {
-    this.$tickerSymbolsDB = this.firebasePerformanceService.getAllPerformances().pipe(
-      map((series) => {
-        const tickerSymbolsDB = [];
-        series.forEach(serie => {
-          const hasTicker = tickerSymbolsDB.find(x => {
-            return x === serie.ticker.toUpperCase();
-          });
-          if (!hasTicker) {
-            tickerSymbolsDB.push(serie.ticker.toUpperCase());
-          }
-        });
-        tickerSymbolsDB.sort((a, b) => {
-          return a.localeCompare(b);
-        });
-        return tickerSymbolsDB;
-      })
-    );
   }
 
   getCalculations(): {name: string, calc: PortfolioCalculation}[] {
