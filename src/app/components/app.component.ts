@@ -1,4 +1,3 @@
-import { PerformanceSeriesDb } from './../models/performance-series-db';
 import { FirebasePerformanceService } from './../services/firebase-performance.service';
 import { PerformanceWrapperService } from './../services/performance-wrapper.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -6,7 +5,8 @@ import { PerformanceSeries } from '../models/performance-series';
 import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
 import { CalculatorUtils } from '../utils/calculatorUtils';
 import { Simulation } from '../utils/simulation';
-import { Subscription, Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -33,6 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   // GUI elements
   tickerSymbolsDB: string[] = [];
+  $tickerSymbolsDB: Observable<string[]>;
   tickerSymbolsDBSub: Subscription;
   tickerSymbols: string[] = [];
   surfacePlotData = [];
@@ -69,7 +70,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.performanceSeriesList = [];
+
     this.getDBTickers();
+    this.tickerSymbolsDBSub = this.$tickerSymbolsDB.subscribe(tickers => {
+      this.tickerSymbolsDB = tickers;
+    });
   }
 
   ngOnDestroy(): void {
@@ -77,21 +82,23 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   getDBTickers(): void {
-    this.tickerSymbolsDBSub = this.firebasePerformanceService.getAllPerformances().subscribe(series => {
-      console.log('Received DB tickers');
-      this.tickerSymbolsDB = [];
-      series.forEach(serie => {
-        const hasTicker = this.tickerSymbolsDB.find(x => {
-          return x === serie.ticker.toUpperCase();
+    this.$tickerSymbolsDB = this.firebasePerformanceService.getAllPerformances().pipe(
+      map((series) => {
+        const tickerSymbolsDB = [];
+        series.forEach(serie => {
+          const hasTicker = tickerSymbolsDB.find(x => {
+            return x === serie.ticker.toUpperCase();
+          });
+          if (!hasTicker) {
+            tickerSymbolsDB.push(serie.ticker.toUpperCase());
+          }
         });
-        if (!hasTicker) {
-          this.tickerSymbolsDB.push(serie.ticker.toUpperCase());
-        }
-      });
-      this.tickerSymbolsDB.sort((a, b) => {
-        return a.localeCompare(b);
-      });
-    });
+        tickerSymbolsDB.sort((a, b) => {
+          return a.localeCompare(b);
+        });
+        return tickerSymbolsDB;
+      })
+    );
   }
 
   getCalculations(): {name: string, calc: PortfolioCalculation}[] {
