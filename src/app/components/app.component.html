@@ -3,6 +3,12 @@
     placeholder="Enter a new ticker symbol"
     secondaryPlaceholder="Enter a ticker symbol"
   >
+    <tag-input-dropdown
+      [autocompleteItems]="tickerSymbolsDB"
+      [showDropdownIfEmpty]="true"
+      [dynamicUpdate]="false"
+    >
+    </tag-input-dropdown>
   </tag-input>
   <button class="btn btn-primary" (click)="makePortfolioCalculations()"
     [disabled]="symbolsLoading > 0 || !performanceSeriesList || performanceSeriesList.length <= 0">
