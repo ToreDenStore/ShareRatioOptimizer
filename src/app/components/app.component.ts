@@ -81,7 +81,15 @@ export class AppComponent implements OnInit, OnDestroy {
       console.log('Received DB tickers');
       this.tickerSymbolsDB = [];
       series.forEach(serie => {
-        this.tickerSymbolsDB.push(serie.ticker);
+        const hasTicker = this.tickerSymbolsDB.find(x => {
+          return x === serie.ticker.toUpperCase();
+        });
+        if (!hasTicker) {
+          this.tickerSymbolsDB.push(serie.ticker.toUpperCase());
+        }
+      });
+      this.tickerSymbolsDB.sort((a, b) => {
+        return a.localeCompare(b);
       });
     });
   }
