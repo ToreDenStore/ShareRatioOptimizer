@@ -1,4 +1,3 @@
-import { PerformanceSeriesDb } from './../models/performance-series-db';
 import { FirebasePerformanceService } from './../services/firebase-performance.service';
 import { PerformanceWrapperService } from './../services/performance-wrapper.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -6,7 +5,7 @@ import { PerformanceSeries } from '../models/performance-series';
 import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
 import { CalculatorUtils } from '../utils/calculatorUtils';
 import { Simulation } from '../utils/simulation';
-import { Subscription, Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -69,29 +68,14 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.performanceSeriesList = [];
-    this.getDBTickers();
+
+    this.tickerSymbolsDBSub = this.firebasePerformanceService.getAllTickers().subscribe(tickers => {
+      this.tickerSymbolsDB = tickers;
+    });
   }
 
   ngOnDestroy(): void {
     this.tickerSymbolsDBSub.unsubscribe();
-  }
-
-  getDBTickers(): void {
-    this.tickerSymbolsDBSub = this.firebasePerformanceService.getAllPerformances().subscribe(series => {
-      console.log('Received DB tickers');
-      this.tickerSymbolsDB = [];
-      series.forEach(serie => {
-        const hasTicker = this.tickerSymbolsDB.find(x => {
-          return x === serie.ticker.toUpperCase();
-        });
-        if (!hasTicker) {
-          this.tickerSymbolsDB.push(serie.ticker.toUpperCase());
-        }
-      });
-      this.tickerSymbolsDB.sort((a, b) => {
-        return a.localeCompare(b);
-      });
-    });
   }
 
   getCalculations(): {name: string, calc: PortfolioCalculation}[] {
