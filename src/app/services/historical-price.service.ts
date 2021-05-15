@@ -1,3 +1,4 @@
+import { map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -62,6 +63,22 @@ export class HistoricalPriceService {
     console.log('Http options: ' + JSON.stringify(this.httpOptions));
 
     return this.http.get<ApiResponseHistoricalPrice>(urlString, this.httpOptions);
+  }
+
+  getTBillData() {
+    return this.http.get('assets/BOND_BX_XTUP_TMUBMUSD01M.csv', {responseType: 'text'}).pipe(
+      map(x => {
+        // console.log('x: ' + x);
+        return x; // csv as string
+      //   this.ngxCsvParser.parse(x, { header: this.header, delimiter: ',' })
+      //   .pipe().subscribe((result: Array<any>) => {
+      //     console.log('Result', result);
+      //     this.csvRecords = result;
+      //   }, (error: NgxCSVParserError) => {
+      //     console.log('Error', error);
+      //   });
+      })
+    );
   }
 
 }

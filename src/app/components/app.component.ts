@@ -1,3 +1,4 @@
+import { HistoricalPriceService } from './../services/historical-price.service';
 import { FirebasePerformanceService } from './../services/firebase-performance.service';
 import { PerformanceWrapperService } from './../services/performance-wrapper.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -63,7 +64,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private performanceWrapperService: PerformanceWrapperService,
-    private firebasePerformanceService: FirebasePerformanceService
+    private firebasePerformanceService: FirebasePerformanceService,
+    private testService: HistoricalPriceService
   ) { }
 
   ngOnInit(): void {
@@ -71,6 +73,10 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.tickerSymbolsDBSub = this.firebasePerformanceService.getAllTickers().subscribe(tickers => {
       this.tickerSymbolsDB = tickers;
+    });
+
+    this.testService.getTBillData().subscribe(res => {
+      console.log('res: ' + res);
     });
   }
 
