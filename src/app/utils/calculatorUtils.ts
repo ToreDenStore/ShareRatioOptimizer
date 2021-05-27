@@ -4,7 +4,7 @@ import { PerformanceUtils } from './performanceUtils';
 
 export class CalculatorUtils {
 
-    public static runPortfolioCalculation(holdings: PortfolioHolding[]): PortfolioCalculation {
+    public static runPortfolioCalculation(holdings: PortfolioHolding[], riskFree: PerformancePoint[]): PortfolioCalculation {
         const days = holdings[0].performanceSeries.length;
         const performances: number[] = [];
         const performancePoints: PerformancePoint[] = [];
@@ -25,6 +25,9 @@ export class CalculatorUtils {
                 holdingWeights[hIndex] = holdingWeights[hIndex] * (1 + holding.performanceSeries[index].performance);
             }
             holdingWeights = this.normalizeWeights(holdingWeights);
+
+            // Remove risk-free interest rate
+            portfolioPerformance -= riskFree[index].performance;
 
             performances.push(portfolioPerformance);
 

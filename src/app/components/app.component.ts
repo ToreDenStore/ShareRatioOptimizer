@@ -79,8 +79,7 @@ export class AppComponent implements OnInit, OnDestroy {
     });
 
     this.historicPriceService.getTBillData().subscribe(res => {
-      this.riskFree = ModelConverter.historicPricesToPerformance('T-BILL', new Date('2020-01-01'), new Date('2020-12-31'), res)
-        .performanceSeries;
+      this.riskFree = res;
     });
   }
 
@@ -150,7 +149,7 @@ export class AppComponent implements OnInit, OnDestroy {
       holdings.push(holding);
     });
 
-    const calculation = CalculatorUtils.runPortfolioCalculation(holdings);
+    const calculation = CalculatorUtils.runPortfolioCalculation(holdings, this.riskFree);
 
     this.calculation = calculation;
 

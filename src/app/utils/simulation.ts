@@ -100,7 +100,7 @@ export class Simulation {
             holdings.push(holding);
         }
 
-        const calculation = CalculatorUtils.runPortfolioCalculation(holdings);
+        const calculation = CalculatorUtils.runPortfolioCalculation(holdings, this.riskFree);
 
         if (this.maxSharpeCalculation === undefined || calculation.sharpeRatio > this.maxSharpeCalculation.sharpeRatio) {
             this.maxSharpeCalculation = calculation;

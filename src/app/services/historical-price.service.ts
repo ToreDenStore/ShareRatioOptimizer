@@ -1,3 +1,4 @@
+import { PerformancePoint } from './../models/performance-series';
 import { map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -68,37 +69,21 @@ export class HistoricalPriceService {
     return this.http.get<ApiResponseHistoricalPrice>(urlString, this.httpOptions);
   }
 
-  getTBillData(): Observable<Price[]> {
+  getTBillData(): Observable<PerformancePoint[]> {
     return this.http.get('assets/BOND_BX_XTUP_TMUBMUSD01M.csv', {responseType: 'text'}).pipe(
       map(x => {
-        const prices: Price[] = [];
+        const prices: PerformancePoint[] = [];
         const parseResult: any[][] = this.ngxCsvParser.csvStringToArray(x, ',');
-        // console.log('Data: ' + x);
-        // console.log('Parse result: ' + JSON.stringify(parseResult));
-        for (let index = 1; index < parseResult.length; index++) {
+        for (let index = 1; index < parseResult.length - 1; index++) {
           const row = parseResult[index];
-          const price: Price = {
+          const nextRow = parseResult[index + 1]; // Previous day
+          const performance = (this.parsePercentage(row[4]) + 1) / (this.parsePercentage(nextRow[4]) + 1) - 1;
+          const price: PerformancePoint = {
             date: new Date(row[0]),
-            open: this.parsePercentage(row[1]),
-            high: this.parsePercentage(row[2]),
-            low: this.parsePercentage(row[3]),
-            close: this.parsePercentage(row[4])
+            performance
           };
           prices.push(price);
         }
-        // parseResult.forEach(row => {
-        //   const price: Price = {
-        //     // ticker: 'T-BILL-1M',
-        //     date: new Date(row[0]),
-        //     open: this.parsePercentage(row[1]),
-        //     high: this.parsePercentage(row[2]),
-        //     low: this.parsePercentage(row[3]),
-        //     close: this.parsePercentage(row[4])
-        //   };
-        //   // console.log('Price: ' + JSON.stringify(price));
-          
-        //   prices.push(price);
-        // });
         return prices;
       })
     );
