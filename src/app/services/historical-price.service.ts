@@ -1,9 +1,11 @@
 import { map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { NgxCsvParser } from 'ngx-csv-parser';
 import { Observable } from 'rxjs';
 import { local } from 'src/environments/local';
 import { ApiResponseHistoricalPrice } from '../models/api-response-historical-price';
+import { Price } from '../models/price';
 
 @Injectable({
   providedIn: 'root'
@@ -41,7 +43,8 @@ export class HistoricalPriceService {
   };
 
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private ngxCsvParser: NgxCsvParser
   ) { }
 
   getHistoricalData(dateFrom: Date, dateTo: Date, ticker: string): Observable<ApiResponseHistoricalPrice> {
@@ -65,20 +68,29 @@ export class HistoricalPriceService {
     return this.http.get<ApiResponseHistoricalPrice>(urlString, this.httpOptions);
   }
 
-  getTBillData() {
+  getTBillData(): Observable<Price[]> {
     return this.http.get('assets/BOND_BX_XTUP_TMUBMUSD01M.csv', {responseType: 'text'}).pipe(
       map(x => {
-        // console.log('x: ' + x);
-        return x; // csv as string
-      //   this.ngxCsvParser.parse(x, { header: this.header, delimiter: ',' })
-      //   .pipe().subscribe((result: Array<any>) => {
-      //     console.log('Result', result);
-      //     this.csvRecords = result;
-      //   }, (error: NgxCSVParserError) => {
-      //     console.log('Error', error);
-      //   });
+        const prices: Price[] = [];
+        const parseResult: any[][] = this.ngxCsvParser.csvStringToArray(x, ';');
+        parseResult.forEach(row => {
+          const price: Price = {
+            // ticker: 'T-BILL-1M',
+            date: new Date(row[0]),
+            open: this.parsePercentage(row[1]),
+            high: this.parsePercentage(row[2]),
+            low: this.parsePercentage(row[3]),
+            close: this.parsePercentage(row[4])
+          };
+          prices.push(price);
+        });
+        return prices;
       })
     );
+  }
+
+  private parsePercentage(input: string): number {
+    return parseFloat(input) / 100.0;
   }
 
 }

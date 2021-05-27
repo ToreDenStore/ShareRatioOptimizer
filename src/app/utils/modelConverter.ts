@@ -1,7 +1,8 @@
 import { PerformanceUtils } from './performanceUtils';
-import { PerformanceSeriesDb } from './../models/performance-series-db';
+import { PerformanceSeriesDb } from '../models/performance-series-db';
 import { PerformancePoint, PerformanceSeries } from '../models/performance-series';
 import { ApiResponseHistoricalPrice } from '../models/api-response-historical-price';
+import { Price } from '../models/price';
 
 export class ModelConverter {
 
@@ -42,25 +43,39 @@ export class ModelConverter {
         return guiModel;
     }
 
+    public static apiPriceToPrice(input: ApiResponseHistoricalPrice): Price[] {
+        const prices: Price[] = [];
+        const filteredList = input.prices.filter(x => {
+            return x.type == null;
+        });
+        filteredList.forEach(apiPrice => {
+            const price: Price = {
+                date: new Date(apiPrice.date / 1000),
+                open: apiPrice.open,
+                close: apiPrice.close,
+                low: apiPrice.low,
+                high: apiPrice.high
+            };
+            prices.push(price);
+        });
+        return prices;
+    }
+
     public static historicPricesToPerformance(
         ticker: string,
         dateFrom: Date,
         dateTo: Date,
-        prices: ApiResponseHistoricalPrice
+        prices: Price[]
     ): PerformanceSeries {
-        const filteredList = prices.prices.filter(x => {
-            return x.type == null;
-        });
-        // console.log('Filtered list: ' + JSON.stringify(filteredList));
         const performances: PerformancePoint[] = [];
         const performancesNumbers: number[] = [];
 
         // List is sorted by latest date first
-        for (let index = 0; index < filteredList.length - 1; index++) {
-            const price = filteredList[index];
+        for (let index = 0; index < prices.length - 1; index++) {
+            const price = prices[index];
             const performancePoint: PerformancePoint = new PerformancePoint();
-            performancePoint.date = new Date(price.date * 1000);
-            performancePoint.performance = price.close / filteredList[index + 1].close - 1;
+            performancePoint.date = price.date;
+            performancePoint.performance = price.close / prices[index + 1].close - 1;
             performances.push(performancePoint);
             performancesNumbers.push(performancePoint.performance);
         }
