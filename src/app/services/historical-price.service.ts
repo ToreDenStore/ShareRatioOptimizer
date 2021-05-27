@@ -72,10 +72,12 @@ export class HistoricalPriceService {
     return this.http.get('assets/BOND_BX_XTUP_TMUBMUSD01M.csv', {responseType: 'text'}).pipe(
       map(x => {
         const prices: Price[] = [];
-        const parseResult: any[][] = this.ngxCsvParser.csvStringToArray(x, ';');
-        parseResult.forEach(row => {
+        const parseResult: any[][] = this.ngxCsvParser.csvStringToArray(x, ',');
+        // console.log('Data: ' + x);
+        // console.log('Parse result: ' + JSON.stringify(parseResult));
+        for (let index = 1; index < parseResult.length; index++) {
+          const row = parseResult[index];
           const price: Price = {
-            // ticker: 'T-BILL-1M',
             date: new Date(row[0]),
             open: this.parsePercentage(row[1]),
             high: this.parsePercentage(row[2]),
@@ -83,13 +85,28 @@ export class HistoricalPriceService {
             close: this.parsePercentage(row[4])
           };
           prices.push(price);
-        });
+        }
+        // parseResult.forEach(row => {
+        //   const price: Price = {
+        //     // ticker: 'T-BILL-1M',
+        //     date: new Date(row[0]),
+        //     open: this.parsePercentage(row[1]),
+        //     high: this.parsePercentage(row[2]),
+        //     low: this.parsePercentage(row[3]),
+        //     close: this.parsePercentage(row[4])
+        //   };
+        //   // console.log('Price: ' + JSON.stringify(price));
+          
+        //   prices.push(price);
+        // });
         return prices;
       })
     );
   }
 
   private parsePercentage(input: string): number {
+    // console.log('String: ' + input);
+    // console.log('Number: ' + parseFloat(input));
     return parseFloat(input) / 100.0;
   }
 

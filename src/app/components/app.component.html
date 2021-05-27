@@ -12,7 +12,7 @@
     </tag-input-dropdown>
   </tag-input>
   <button class="btn btn-primary" (click)="makePortfolioCalculations()"
-    [disabled]="symbolsLoading > 0 || !performanceSeriesList || performanceSeriesList.length <= 0">
+    [disabled]="symbolsLoading > 0 || !performanceSeriesList || performanceSeriesList.length <= 0 || !riskFree ">
     Run calculations
   </button>
   <table class="table table-striped">

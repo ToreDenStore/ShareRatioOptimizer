@@ -1,4 +1,4 @@
-import { PerformanceSeries } from '../models/performance-series';
+import { PerformancePoint, PerformanceSeries } from '../models/performance-series';
 import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
 import { CalculatorUtils } from './calculatorUtils';
 
@@ -9,6 +9,7 @@ export class Simulation {
     public weights = [0.001, 1, 2, 3, 4, 5, 6, 7, 9, 10, 15, 20, 50]; // 5 is middle
 
     private listOfSeries: PerformanceSeries[];
+    private riskFree: PerformancePoint[];
 
     data: number[];
     maxSharpeCalculation: PortfolioCalculation;
@@ -25,12 +26,15 @@ export class Simulation {
         y: number;
     }[] = [];
 
-    public constructor(listOfSeries: PerformanceSeries[]) {
+    public constructor(listOfSeries: PerformanceSeries[], riskFree: PerformancePoint[]) {
         this.listOfSeries = listOfSeries;
+        this.riskFree = riskFree;
     }
 
     public startSimulation(): void {
         console.log('Starting simulation with input: ' + JSON.stringify(this.weights));
+        console.log('Riskfree: ' + JSON.stringify(this.riskFree));
+        
         this.data = [this.listOfSeries.length];
 
         // Initialize array of plotData

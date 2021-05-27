@@ -1,3 +1,5 @@
+import { ModelConverter } from './../utils/modelConverter';
+import { PerformancePoint } from './../models/performance-series';
 import { HistoricalPriceService } from './../services/historical-price.service';
 import { FirebasePerformanceService } from './../services/firebase-performance.service';
 import { PerformanceWrapperService } from './../services/performance-wrapper.service';
@@ -6,7 +8,7 @@ import { PerformanceSeries } from '../models/performance-series';
 import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
 import { CalculatorUtils } from '../utils/calculatorUtils';
 import { Simulation } from '../utils/simulation';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +26,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private toDate = new Date('2020-12-31');
 
   performanceSeriesList: PerformanceSeries[];
+  riskFree: PerformancePoint[];
   calculation: PortfolioCalculation;
   calculationMaxSharpe: PortfolioCalculation;
   calculationMinStdev: PortfolioCalculation;
@@ -65,7 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private performanceWrapperService: PerformanceWrapperService,
     private firebasePerformanceService: FirebasePerformanceService,
-    private testService: HistoricalPriceService
+    private historicPriceService: HistoricalPriceService
   ) { }
 
   ngOnInit(): void {
@@ -75,8 +78,9 @@ export class AppComponent implements OnInit, OnDestroy {
       this.tickerSymbolsDB = tickers;
     });
 
-    this.testService.getTBillData().subscribe(res => {
-      console.log('res: ' + res);
+    this.historicPriceService.getTBillData().subscribe(res => {
+      this.riskFree = ModelConverter.historicPricesToPerformance('T-BILL', new Date('2020-01-01'), new Date('2020-12-31'), res)
+        .performanceSeries;
     });
   }
 
@@ -156,7 +160,7 @@ export class AppComponent implements OnInit, OnDestroy {
   testSimulationLogic(): void {
     this.surfacePlotData = [];
     this.linePlotData = [];
-    const sim = new Simulation(this.performanceSeriesList);
+    const sim = new Simulation(this.performanceSeriesList, this.riskFree);
     sim.startSimulation();
     this.calculationMaxSharpe = sim.maxSharpeCalculation;
     this.calculationMinStdev = sim.minStdevCalculation;
