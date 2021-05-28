@@ -1,4 +1,3 @@
-import { PerformancePoint } from './../models/performance-series';
 import { map } from 'rxjs/operators';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -69,18 +68,16 @@ export class HistoricalPriceService {
     return this.http.get<ApiResponseHistoricalPrice>(urlString, this.httpOptions);
   }
 
-  getTBillData(): Observable<PerformancePoint[]> {
+  getTBillData(): Observable<Price[]> {
     return this.http.get('assets/BOND_BX_XTUP_TMUBMUSD01M.csv', {responseType: 'text'}).pipe(
       map(x => {
-        const prices: PerformancePoint[] = [];
+        const prices: Price[] = [];
         const parseResult: any[][] = this.ngxCsvParser.csvStringToArray(x, ',');
         for (let index = 1; index < parseResult.length - 1; index++) {
           const row = parseResult[index];
-          const nextRow = parseResult[index + 1]; // Previous day
-          const performance = (this.parsePercentage(row[4]) + 1) / (this.parsePercentage(nextRow[4]) + 1) - 1;
-          const price: PerformancePoint = {
+          const price: Price = {
             date: new Date(row[0]),
-            performance
+            close: this.parsePercentage(row[4])
           };
           prices.push(price);
         }

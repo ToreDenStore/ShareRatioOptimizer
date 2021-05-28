@@ -1,5 +1,3 @@
-import { ModelConverter } from './../utils/modelConverter';
-import { PerformancePoint } from './../models/performance-series';
 import { HistoricalPriceService } from './../services/historical-price.service';
 import { FirebasePerformanceService } from './../services/firebase-performance.service';
 import { PerformanceWrapperService } from './../services/performance-wrapper.service';
@@ -9,6 +7,7 @@ import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calc
 import { CalculatorUtils } from '../utils/calculatorUtils';
 import { Simulation } from '../utils/simulation';
 import { Subscription } from 'rxjs';
+import { Price } from '../models/price';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +25,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private toDate = new Date('2020-12-31');
 
   performanceSeriesList: PerformanceSeries[];
-  riskFree: PerformancePoint[];
+  riskFree: Price[];
   calculation: PortfolioCalculation;
   calculationMaxSharpe: PortfolioCalculation;
   calculationMinStdev: PortfolioCalculation;
@@ -149,8 +148,7 @@ export class AppComponent implements OnInit, OnDestroy {
       holdings.push(holding);
     });
 
-    const calculation = CalculatorUtils.runPortfolioCalculation(holdings, this.riskFree);
-
+    const calculation = CalculatorUtils.runPortfolioCalculation(holdings, this.riskFree[this.riskFree.length - 1].close);
     this.calculation = calculation;
 
     this.testSimulationLogic();
