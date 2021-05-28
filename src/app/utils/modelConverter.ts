@@ -39,7 +39,7 @@ export class ModelConverter {
         });
         guiModel.return = PerformanceUtils.getTotalPerformance(performanceSeriesNumbers);
         guiModel.stDev = PerformanceUtils.getStandardDeviationAnnualized(performanceSeriesNumbers);
-        guiModel.sharpeRatio = guiModel.return / guiModel.stDev;
+        // guiModel.sharpeRatio = guiModel.return / guiModel.stDev;
         return guiModel;
     }
 
@@ -88,7 +88,7 @@ export class ModelConverter {
 
         performanceSeries.return = PerformanceUtils.getTotalPerformance(performancesNumbers);
         performanceSeries.stDev = PerformanceUtils.getStandardDeviationAnnualized(performancesNumbers);
-        performanceSeries.sharpeRatio = performanceSeries.return / performanceSeries.stDev;
+        // performanceSeries.sharpeRatio = performanceSeries.return / performanceSeries.stDev;
         return performanceSeries;
     }
 
