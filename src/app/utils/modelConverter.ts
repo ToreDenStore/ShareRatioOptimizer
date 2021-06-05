@@ -1,3 +1,4 @@
+import { RiskFreeNumbers } from './riskFreeNumbers';
 import { PerformanceUtils } from './performanceUtils';
 import { PerformanceSeriesDb } from '../models/performance-series-db';
 import { PerformancePoint, PerformanceSeries } from '../models/performance-series';
@@ -39,7 +40,8 @@ export class ModelConverter {
         });
         guiModel.return = PerformanceUtils.getTotalPerformance(performanceSeriesNumbers);
         guiModel.stDev = PerformanceUtils.getStandardDeviationAnnualized(performanceSeriesNumbers);
-        // guiModel.sharpeRatio = guiModel.return / guiModel.stDev;
+        guiModel.riskFree = RiskFreeNumbers.TBILL1MONTH2020;
+        guiModel.sharpeRatio = PerformanceUtils.getSharpeRatioForPerformanceSeries(guiModel);
         return guiModel;
     }
 
@@ -84,11 +86,12 @@ export class ModelConverter {
         performanceSeries.dateFrom = dateFrom;
         performanceSeries.dateTo = dateTo;
         performanceSeries.ticker = ticker;
+        performanceSeries.riskFree = RiskFreeNumbers.TBILL1MONTH2020;
         performanceSeries.performanceSeries = performances;
 
         performanceSeries.return = PerformanceUtils.getTotalPerformance(performancesNumbers);
         performanceSeries.stDev = PerformanceUtils.getStandardDeviationAnnualized(performancesNumbers);
-        // performanceSeries.sharpeRatio = performanceSeries.return / performanceSeries.stDev;
+        performanceSeries.sharpeRatio = PerformanceUtils.getSharpeRatioForPerformanceSeries(performanceSeries);
         return performanceSeries;
     }
 

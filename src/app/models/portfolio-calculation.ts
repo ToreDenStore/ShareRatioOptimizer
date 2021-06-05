@@ -3,6 +3,7 @@ import { PerformancePoint } from './performance-series';
 export class PortfolioCalculation {
     stDev: number;
     performance: number;
+    riskFree: number;
     sharpeRatio: number;
     performanceSeries: PerformancePoint[];
     holdingsData: PortfolioHolding[];

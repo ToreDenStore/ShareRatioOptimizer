@@ -1,4 +1,4 @@
-import { HistoricalPriceService } from './../services/historical-price.service';
+import { RiskFreeNumbers } from './../utils/riskFreeNumbers';
 import { FirebasePerformanceService } from './../services/firebase-performance.service';
 import { PerformanceWrapperService } from './../services/performance-wrapper.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -7,7 +7,6 @@ import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calc
 import { CalculatorUtils } from '../utils/calculatorUtils';
 import { Simulation } from '../utils/simulation';
 import { Subscription } from 'rxjs';
-import { Price } from '../models/price';
 
 @Component({
   selector: 'app-root',
@@ -25,7 +24,6 @@ export class AppComponent implements OnInit, OnDestroy {
   private toDate = new Date('2020-12-31');
 
   performanceSeriesList: PerformanceSeries[];
-  riskFree: Price[];
   calculation: PortfolioCalculation;
   calculationMaxSharpe: PortfolioCalculation;
   calculationMinStdev: PortfolioCalculation;
@@ -66,8 +64,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   constructor(
     private performanceWrapperService: PerformanceWrapperService,
-    private firebasePerformanceService: FirebasePerformanceService,
-    private historicPriceService: HistoricalPriceService
+    private firebasePerformanceService: FirebasePerformanceService
   ) { }
 
   ngOnInit(): void {
@@ -75,10 +72,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.tickerSymbolsDBSub = this.firebasePerformanceService.getAllTickers().subscribe(tickers => {
       this.tickerSymbolsDB = tickers;
-    });
-
-    this.historicPriceService.getTBillData().subscribe(res => {
-      this.riskFree = res;
     });
   }
 
@@ -94,6 +87,7 @@ export class AppComponent implements OnInit, OnDestroy {
       calc.sharpeRatio = series.sharpeRatio;
       calc.stDev = series.stDev;
       calc.performance = series.return;
+      calc.riskFree = series.riskFree;
       calc.holdingsData = [];
       for (let i = 0; i < this.performanceSeriesList.length; i++) {
         const element = this.performanceSeriesList[i];
@@ -148,7 +142,7 @@ export class AppComponent implements OnInit, OnDestroy {
       holdings.push(holding);
     });
 
-    const calculation = CalculatorUtils.runPortfolioCalculation(holdings, this.riskFree[this.riskFree.length - 1].close);
+    const calculation = CalculatorUtils.runPortfolioCalculation(holdings, RiskFreeNumbers.TBILL1MONTH2020);
     this.calculation = calculation;
 
     this.testSimulationLogic();
@@ -157,7 +151,7 @@ export class AppComponent implements OnInit, OnDestroy {
   testSimulationLogic(): void {
     this.surfacePlotData = [];
     this.linePlotData = [];
-    const sim = new Simulation(this.performanceSeriesList, this.riskFree);
+    const sim = new Simulation(this.performanceSeriesList, RiskFreeNumbers.TBILL1MONTH2020);
     sim.startSimulation();
     this.calculationMaxSharpe = sim.maxSharpeCalculation;
     this.calculationMinStdev = sim.minStdevCalculation;

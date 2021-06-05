@@ -27,9 +27,9 @@ export class Simulation {
         y: number;
     }[] = [];
 
-    public constructor(listOfSeries: PerformanceSeries[], riskFree: Price[]) {
+    public constructor(listOfSeries: PerformanceSeries[], riskFree: number) {
         this.listOfSeries = listOfSeries;
-        this.riskFree = riskFree[riskFree.length - 1].close;
+        this.riskFree = riskFree;
     }
 
     public startSimulation(): void {

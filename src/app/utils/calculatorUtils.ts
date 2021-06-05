@@ -40,7 +40,8 @@ export class CalculatorUtils {
         calculation.performanceSeries = performancePoints;
         calculation.performance = PerformanceUtils.getTotalPerformance(performances);
         calculation.stDev = PerformanceUtils.getStandardDeviationAnnualized(performances);
-        calculation.sharpeRatio = (calculation.performance - riskFree) / calculation.stDev;
+        calculation.riskFree = riskFree;
+        calculation.sharpeRatio = PerformanceUtils.getSharpeRatioForCalc(calculation);
 
         // console.log('Performance: ' + calculation.performance);
         // console.log('riskFree: ' + riskFree);
