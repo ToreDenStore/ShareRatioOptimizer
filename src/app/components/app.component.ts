@@ -1,3 +1,4 @@
+import { RiskFreeNumbers } from './../utils/riskFreeNumbers';
 import { FirebasePerformanceService } from './../services/firebase-performance.service';
 import { PerformanceWrapperService } from './../services/performance-wrapper.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -5,7 +6,7 @@ import { PerformanceSeries } from '../models/performance-series';
 import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
 import { CalculatorUtils } from '../utils/calculatorUtils';
 import { Simulation } from '../utils/simulation';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -86,6 +87,7 @@ export class AppComponent implements OnInit, OnDestroy {
       calc.sharpeRatio = series.sharpeRatio;
       calc.stDev = series.stDev;
       calc.performance = series.return;
+      calc.riskFree = series.riskFree;
       calc.holdingsData = [];
       for (let i = 0; i < this.performanceSeriesList.length; i++) {
         const element = this.performanceSeriesList[i];
@@ -140,8 +142,7 @@ export class AppComponent implements OnInit, OnDestroy {
       holdings.push(holding);
     });
 
-    const calculation = CalculatorUtils.runPortfolioCalculation(holdings);
-
+    const calculation = CalculatorUtils.runPortfolioCalculation(holdings, RiskFreeNumbers.TBILL1MONTH2020);
     this.calculation = calculation;
 
     this.testSimulationLogic();
@@ -150,7 +151,7 @@ export class AppComponent implements OnInit, OnDestroy {
   testSimulationLogic(): void {
     this.surfacePlotData = [];
     this.linePlotData = [];
-    const sim = new Simulation(this.performanceSeriesList);
+    const sim = new Simulation(this.performanceSeriesList, RiskFreeNumbers.TBILL1MONTH2020);
     sim.startSimulation();
     this.calculationMaxSharpe = sim.maxSharpeCalculation;
     this.calculationMinStdev = sim.minStdevCalculation;

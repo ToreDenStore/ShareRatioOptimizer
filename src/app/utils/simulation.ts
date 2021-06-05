@@ -1,5 +1,6 @@
 import { PerformanceSeries } from '../models/performance-series';
 import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
+import { Price } from '../models/price';
 import { CalculatorUtils } from './calculatorUtils';
 
 export class Simulation {
@@ -9,6 +10,7 @@ export class Simulation {
     public weights = [0.001, 1, 2, 3, 4, 5, 6, 7, 9, 10, 15, 20, 50]; // 5 is middle
 
     private listOfSeries: PerformanceSeries[];
+    private riskFree: number;
 
     data: number[];
     maxSharpeCalculation: PortfolioCalculation;
@@ -25,12 +27,14 @@ export class Simulation {
         y: number;
     }[] = [];
 
-    public constructor(listOfSeries: PerformanceSeries[]) {
+    public constructor(listOfSeries: PerformanceSeries[], riskFree: number) {
         this.listOfSeries = listOfSeries;
+        this.riskFree = riskFree;
     }
 
     public startSimulation(): void {
         console.log('Starting simulation with input: ' + JSON.stringify(this.weights));
+
         this.data = [this.listOfSeries.length];
 
         // Initialize array of plotData
@@ -96,7 +100,7 @@ export class Simulation {
             holdings.push(holding);
         }
 
-        const calculation = CalculatorUtils.runPortfolioCalculation(holdings);
+        const calculation = CalculatorUtils.runPortfolioCalculation(holdings, this.riskFree);
 
         if (this.maxSharpeCalculation === undefined || calculation.sharpeRatio > this.maxSharpeCalculation.sharpeRatio) {
             this.maxSharpeCalculation = calculation;

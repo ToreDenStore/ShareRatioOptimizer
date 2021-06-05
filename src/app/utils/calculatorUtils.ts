@@ -4,30 +4,33 @@ import { PerformanceUtils } from './performanceUtils';
 
 export class CalculatorUtils {
 
-    public static runPortfolioCalculation(holdings: PortfolioHolding[]): PortfolioCalculation {
+    public static runPortfolioCalculation(holdings: PortfolioHolding[], riskFree: number): PortfolioCalculation {
         const days = holdings[0].performanceSeries.length;
         const performances: number[] = [];
         const performancePoints: PerformancePoint[] = [];
 
-        // Normalize weights
-        let totalWeight = 0;
+        this.normalizeStarterWeights(holdings);
+
+        let holdingWeights: number[] = [];
         holdings.forEach(holding => {
-            totalWeight += holding.weight;
-        });
-        holdings.forEach(holding => {
-            holding.weight *= (1 / totalWeight);
+            holdingWeights.push(holding.weight);
         });
 
         for (let index = 0; index < days; index++) {
-            let performance = 0;
-            holdings.forEach(holding => {
-                performance += holding.performanceSeries[index].performance * holding.weight;
-            });
-            performances.push(performance);
+            let portfolioPerformance = 0;
+            for (let hIndex = 0; hIndex < holdings.length; hIndex++) {
+                const holding = holdings[hIndex];
+                portfolioPerformance += holding.performanceSeries[index].performance * holdingWeights[hIndex];
+                // Recalculate holding weight
+                holdingWeights[hIndex] = holdingWeights[hIndex] * (1 + holding.performanceSeries[index].performance);
+            }
+            holdingWeights = this.normalizeWeights(holdingWeights);
+
+            performances.push(portfolioPerformance);
 
             const point: PerformancePoint = {
                 date: holdings[0].performanceSeries[index].date,
-                performance
+                performance: portfolioPerformance
             };
             performancePoints.push(point);
         }
@@ -37,8 +40,33 @@ export class CalculatorUtils {
         calculation.performanceSeries = performancePoints;
         calculation.performance = PerformanceUtils.getTotalPerformance(performances);
         calculation.stDev = PerformanceUtils.getStandardDeviationAnnualized(performances);
-        calculation.sharpeRatio = calculation.performance / calculation.stDev;
+        calculation.riskFree = riskFree;
+        calculation.sharpeRatio = PerformanceUtils.getSharpeRatioForCalc(calculation);
+
+        // console.log('Performance: ' + calculation.performance);
+        // console.log('riskFree: ' + riskFree);
 
         return calculation;
+    }
+
+    public static normalizeWeights(holdingWeights: number[]): number[] {
+        let totalWeight = 0;
+        holdingWeights.forEach(weight => {
+            totalWeight += weight;
+        });
+        for (let index = 0; index < holdingWeights.length; index++) {
+            holdingWeights[index] *= (1 / totalWeight);
+        }
+        return holdingWeights;
+    }
+
+    public static normalizeStarterWeights(holdings: PortfolioHolding[]): void {
+        let totalWeight = 0;
+        holdings.forEach(holding => {
+            totalWeight += holding.weight;
+        });
+        holdings.forEach(holding => {
+            holding.weight *= (1 / totalWeight);
+        });
     }
 }

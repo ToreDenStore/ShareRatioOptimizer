@@ -21,6 +21,7 @@
         <th scope="col">Calculation</th>
         <th scope="col">Return</th>
         <th scope="col">Volatility</th>
+        <th scope="col">Risk free</th>
         <th scope="col">Sharpe ratio</th>
         <th scope="col" *ngFor="let series of performanceSeriesList">{{series.ticker}}</th>
       </tr>
@@ -30,6 +31,7 @@
         <td>{{ item.name }}</td>
         <td>{{ item.calc.performance | percent:'.2'}}</td>
         <td>{{ item.calc.stDev | percent:'.2'}}</td>
+        <td>{{ item.calc.riskFree | percent:'.2'}}</td>
         <td>{{ item.calc.sharpeRatio | number: '.3'}}</td>
         <td *ngFor="let holding of item.calc.holdingsData"
           [ngStyle]="{'font-weight': holding.weight === 1 ? 'bold' : 'normal', 'color': holding.weight === 0 ? 'LightGrey' : 'Black'}">

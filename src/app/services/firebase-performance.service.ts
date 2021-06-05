@@ -1,5 +1,5 @@
 import { PerformanceSeriesDb } from './../models/performance-series-db';
-import { ModelConverter } from './../utils/modelDbConverter';
+import { ModelConverter } from '../utils/modelConverter';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';

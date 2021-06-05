@@ -13,6 +13,7 @@ import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule } from 'angular-plotly.js';
 import { CommonModule } from '@angular/common';
 PlotlyModule.plotlyjs = PlotlyJS;
+import { NgxCsvParserModule } from 'ngx-csv-parser';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     CommonModule,
-    PlotlyModule
+    PlotlyModule,
+    NgxCsvParserModule
   ],
   providers: [],
   bootstrap: [AppComponent],
