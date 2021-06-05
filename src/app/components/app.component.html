@@ -29,11 +29,11 @@
     <tbody>
       <tr *ngFor="let item of getCalculations();">
         <td>{{ item.name }}</td>
-        <td>{{ item.calc.performance | percent:'.2'}}</td>
-        <td>{{ item.calc.stDev | percent:'.2'}}</td>
-        <td>{{ item.calc.riskFree | percent:'.2'}}</td>
-        <td>{{ item.calc.sharpeRatio | number: '.3'}}</td>
-        <td *ngFor="let holding of item.calc.holdingsData"
+        <td>{{ item.performance | percent:'.2'}}</td>
+        <td>{{ item.stDev | percent:'.2'}}</td>
+        <td>{{ item.riskFree | percent:'.2'}}</td>
+        <td>{{ item.sharpeRatio | number: '.3'}}</td>
+        <td *ngFor="let holding of item.holdingsData"
           [ngStyle]="{'font-weight': holding.weight === 1 ? 'bold' : 'normal', 'color': holding.weight === 0 ? 'LightGrey' : 'Black'}">
           {{holding.weight | percent:'.2'}}
         </td>

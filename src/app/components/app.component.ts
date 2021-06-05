@@ -1,3 +1,4 @@
+import { VisualizableInGraph } from './../models/visualizable-in-graph';
 import { RiskFreeNumbers } from './../utils/riskFreeNumbers';
 import { FirebasePerformanceService } from './../services/firebase-performance.service';
 import { PerformanceWrapperService } from './../services/performance-wrapper.service';
@@ -17,7 +18,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
   // TODO: Handle limit of max 5 api calls per second
   // TODO: Save all loaded data into memory to avoid more API or database calls
-  // TODO: Make one table for all data, make model for this also, also sortable table
 
   // Constants
   private fromDate = new Date('2020-01-01');
@@ -79,8 +79,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.tickerSymbolsDBSub.unsubscribe();
   }
 
-  getCalculations(): {name: string, calc: PortfolioCalculation}[] {
-    const calculations = [];
+  getCalculations(): VisualizableInGraph[] {
+    const calculations: VisualizableInGraph[] = [];
     let index = 0;
     this.performanceSeriesList.forEach(series => {
       const calc = new PortfolioCalculation();
@@ -100,33 +100,21 @@ export class AppComponent implements OnInit, OnDestroy {
         }
         calc.holdingsData.push(holding);
       }
-      const obj = {
-        name: series.ticker,
-        calc
-      };
-      calculations.push(obj);
+      calc.name = series.ticker;
+      calculations.push(calc);
       index++;
     });
     if (this.calculation !== undefined && this.calculation !== null) {
-      const obj = {
-        name: 'Evenly weighted',
-        calc: this.calculation
-      };
-      calculations.push(obj);
+      this.calculation.name = 'Evenly weighted';
+      calculations.push(this.calculation);
     }
     if (this.calculationMaxSharpe !== undefined && this.calculationMaxSharpe !== null) {
-      const obj = {
-        name: 'Max Sharpe',
-        calc: this.calculationMaxSharpe
-      };
-      calculations.push(obj);
+      this.calculationMaxSharpe.name = 'Max Sharpe';
+      calculations.push(this.calculationMaxSharpe);
     }
     if (this.calculationMinStdev !== undefined && this.calculationMinStdev !== null) {
-      const obj = {
-        name: 'Min volatility',
-        calc: this.calculationMinStdev
-      };
-      calculations.push(obj);
+      this.calculationMinStdev.name = 'Min volatility';
+      calculations.push(this.calculationMinStdev);
     }
     return calculations;
   }

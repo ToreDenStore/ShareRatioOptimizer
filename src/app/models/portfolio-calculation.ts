@@ -1,6 +1,8 @@
 import { PerformancePoint } from './performance-point';
+import { VisualizableInGraph } from './visualizable-in-graph';
 
-export class PortfolioCalculation {
+export class PortfolioCalculation implements VisualizableInGraph {
+    name: string;
     stDev: number;
     performance: number;
     riskFree: number;
