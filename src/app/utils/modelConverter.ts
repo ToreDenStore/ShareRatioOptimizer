@@ -1,9 +1,10 @@
 import { RiskFreeNumbers } from './riskFreeNumbers';
 import { PerformanceUtils } from './performanceUtils';
 import { PerformanceSeriesDb } from '../models/performance-series-db';
-import { PerformancePoint, PerformanceSeries } from '../models/performance-series';
+import { PerformanceSeries } from '../models/performance-series';
 import { ApiResponseHistoricalPrice } from '../models/api-response-historical-price';
 import { Price } from '../models/price';
+import { PerformancePoint } from '../models/performance-point';
 
 export class ModelConverter {
 

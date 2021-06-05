@@ -41,8 +41,8 @@ export class HistoricalPriceService {
   };
 
   constructor(
-    private http: HttpClient,
-    private ngxCsvParser: NgxCsvParser
+    private http: HttpClient
+    // ,private ngxCsvParser: NgxCsvParser
   ) { }
 
   getHistoricalData(dateFrom: Date, dateTo: Date, ticker: string): Observable<ApiResponseHistoricalPrice> {

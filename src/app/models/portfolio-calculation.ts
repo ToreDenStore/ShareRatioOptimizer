@@ -1,4 +1,4 @@
-import { PerformancePoint } from './performance-series';
+import { PerformancePoint } from './performance-point';
 
 export class PortfolioCalculation {
     stDev: number;

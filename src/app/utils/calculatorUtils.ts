@@ -1,4 +1,4 @@
-import { PerformancePoint } from '../models/performance-series';
+import { PerformancePoint } from '../models/performance-point';
 import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
 import { PerformanceUtils } from './performanceUtils';
 
