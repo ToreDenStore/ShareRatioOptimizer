@@ -23,6 +23,8 @@ export class AppComponent implements OnInit, OnDestroy {
   private fromDate = new Date('2020-01-01');
   private toDate = new Date('2020-12-31');
 
+  calculations: VisualizableInGraph[];
+
   performanceSeriesList: PerformanceSeries[];
   calculation: PortfolioCalculation;
   calculationMaxSharpe: PortfolioCalculation;
@@ -79,7 +81,8 @@ export class AppComponent implements OnInit, OnDestroy {
     this.tickerSymbolsDBSub.unsubscribe();
   }
 
-  getCalculations(): VisualizableInGraph[] {
+  combineCalculations(): VisualizableInGraph[] {
+    console.log('Combining calculations');
     const calculations: VisualizableInGraph[] = [];
     let index = 0;
     this.performanceSeriesList.forEach(series => {
@@ -116,6 +119,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.calculationMinStdev.name = 'Min volatility';
       calculations.push(this.calculationMinStdev);
     }
+    this.calculations = calculations;
     return calculations;
   }
 
@@ -134,6 +138,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.calculation = calculation;
 
     this.testSimulationLogic();
+    this.combineCalculations();
   }
 
   testSimulationLogic(): void {
