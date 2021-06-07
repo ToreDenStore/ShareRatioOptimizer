@@ -27,7 +27,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of getCalculations();">
+      <tr *ngFor="let item of calculations;">
         <td>{{ item.name }}</td>
         <td>{{ item.performance | percent:'.2'}}</td>
         <td>{{ item.stDev | percent:'.2'}}</td>
@@ -41,6 +41,7 @@
     </tbody>
   </table>
 
+  <app-scatter-plot [inputData]="calculations"></app-scatter-plot>
   <plotly-plot [data]="surfacePlotData" [layout]="plotLayoutSurface" *ngIf="surfacePlotData.length > 0"></plotly-plot>
   <plotly-plot [data]="linePlotData" [layout]="plotLayout" *ngIf="linePlotData.length > 0"></plotly-plot>
 

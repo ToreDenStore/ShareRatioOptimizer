@@ -1,0 +1,7 @@
+<ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0" *ngIf="plotData && plotData.length > 0">
+    <ngb-panel title="Show/hide scatter plot">
+        <ng-template ngbPanelContent>
+            <plotly-plot [data]="plotData" [layout]="plotLayout"></plotly-plot>
+        </ng-template>
+    </ngb-panel>
+</ngb-accordion>

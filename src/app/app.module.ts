@@ -1,3 +1,4 @@
+import { ScatterPlotComponent } from './components/scatter-plot/scatter-plot.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './components/app.component';
@@ -17,7 +18,8 @@ import { NgxCsvParserModule } from 'ngx-csv-parser';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ScatterPlotComponent
   ],
   imports: [
     BrowserModule,
