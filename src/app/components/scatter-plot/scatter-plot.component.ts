@@ -18,10 +18,12 @@ export class ScatterPlotComponent implements OnChanges {
     title: 'Scatter plot',
     xaxis: {
       title: 'Lower Volatility',
-      autorange: 'reversed'
+      autorange: 'reversed',
+      tickformat: ',.2%'
     },
     yaxis: {
       title: 'Higher Performance',
+      tickformat: ',.2%'
     }
   };
 
