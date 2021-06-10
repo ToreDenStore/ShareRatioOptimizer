@@ -34,6 +34,7 @@ export class SurfacePlotComponent implements OnChanges {
 
   ngOnChanges(): void {
     console.log('Changes detected in surface plot input');
+    this.plotData = [];
     if (this.inputData && this.axisPoints && this.surfacePlotData) {
       this.plotData = [];
       const plotDataObject = {

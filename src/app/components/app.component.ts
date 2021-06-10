@@ -150,6 +150,7 @@ export class AppComponent implements OnInit, OnDestroy {
     sim.startSimulation();
     this.calculationMaxSharpe = sim.maxSharpeCalculation;
     this.calculationMinStdev = sim.minStdevCalculation;
+    this.weights = sim.weights;
 
     if (this.performanceSeriesList.length === 2) {
       this.linePlotData.push(sim.linePlotObject);
@@ -157,7 +158,6 @@ export class AppComponent implements OnInit, OnDestroy {
       this.plotLayout.yaxis.title = this.calculationMaxSharpe.holdingsData[1].ticker + ' weights';
     }
     if (this.performanceSeriesList.length === 3) {
-      this.weights = sim.weights;
       this.surfacePlotData = sim.surfacePlotData;
 
       // const plotDataObject = {
