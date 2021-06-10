@@ -191,7 +191,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.calculation = null;
     this.calculationMaxSharpe = null;
     this.calculationMinStdev = null;
-    // this.surfacePlotData = [];
+    this.surfacePlotData = null;
     this.linePlotData = [];
 
     // Remove from performance series those that are no longer present
