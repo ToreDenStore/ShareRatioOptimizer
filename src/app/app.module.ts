@@ -1,3 +1,4 @@
+import { SurfacePlotComponent } from './components/surface-plot/surface-plot.component';
 import { ScatterPlotComponent } from './components/scatter-plot/scatter-plot.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -19,7 +20,8 @@ import { NgxCsvParserModule } from 'ngx-csv-parser';
 @NgModule({
   declarations: [
     AppComponent,
-    ScatterPlotComponent
+    ScatterPlotComponent,
+    SurfacePlotComponent
   ],
   imports: [
     BrowserModule,
