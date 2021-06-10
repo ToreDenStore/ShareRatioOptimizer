@@ -1,6 +1,5 @@
 import { PerformanceSeries } from '../models/performance-series';
 import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
-import { Price } from '../models/price';
 import { CalculatorUtils } from './calculatorUtils';
 
 export class Simulation {

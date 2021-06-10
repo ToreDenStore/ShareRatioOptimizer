@@ -28,6 +28,8 @@ export class AppComponent implements OnInit, OnDestroy {
   performanceSeriesList: PerformanceSeries[];
   calculation: PortfolioCalculation;
   calculationMaxSharpe: PortfolioCalculation;
+  weights: number[];
+  surfacePlotData: number[][];
   calculationMinStdev: PortfolioCalculation;
 
   // Control elements
@@ -37,7 +39,6 @@ export class AppComponent implements OnInit, OnDestroy {
   tickerSymbolsDB: string[] = [];
   tickerSymbolsDBSub: Subscription;
   tickerSymbols: string[] = [];
-  surfacePlotData = [];
   linePlotData = [];
   plotLayout = {
     width: 800,
@@ -48,19 +49,6 @@ export class AppComponent implements OnInit, OnDestroy {
     },
     yaxis: {
       title: 'Placeholder y axis title',
-    },
-  };
-  plotLayoutSurface = {
-    width: 800,
-    height: 600,
-    title: 'Sharpe Ratio by weights',
-    xaxis: {
-      title: 'Placeholder x axis title',
-      type: 'category'
-    },
-    yaxis: {
-      title: 'Placeholder y axis title',
-      type: 'category'
     },
   };
 
@@ -142,12 +130,12 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   testSimulationLogic(): void {
-    this.surfacePlotData = [];
     this.linePlotData = [];
     const sim = new Simulation(this.performanceSeriesList, RiskFreeNumbers.TBILL1MONTH2020);
     sim.startSimulation();
     this.calculationMaxSharpe = sim.maxSharpeCalculation;
     this.calculationMinStdev = sim.minStdevCalculation;
+    this.weights = sim.weights;
 
     if (this.performanceSeriesList.length === 2) {
       this.linePlotData.push(sim.linePlotObject);
@@ -155,23 +143,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.plotLayout.yaxis.title = this.calculationMaxSharpe.holdingsData[1].ticker + ' weights';
     }
     if (this.performanceSeriesList.length === 3) {
-      const plotDataObject = {
-        z: sim.surfacePlotData,
-        type: 'contour',
-        contours: {
-          // start: this.calculationMaxSharpe.sharpeRatio - 1,
-          // end: this.calculationMaxSharpe.sharpeRatio,
-          // size: 0.01,
-          coloring: 'heatmap',
-          showlabels: true
-        },
-        x: sim.weights,
-        y: sim.weights
-      };
-      this.plotLayoutSurface.xaxis.title = this.calculationMaxSharpe.holdingsData[1].ticker + ' weights';
-      this.plotLayoutSurface.yaxis.title = this.calculationMaxSharpe.holdingsData[0].ticker + ' weights';
-      this.surfacePlotData.push(plotDataObject);
-      // console.log('Plot data: ' + JSON.stringify(plotDataObject));
+      this.surfacePlotData = sim.surfacePlotData;
     }
   }
 
@@ -186,7 +158,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.calculation = null;
     this.calculationMaxSharpe = null;
     this.calculationMinStdev = null;
-    this.surfacePlotData = [];
+    this.surfacePlotData = null;
     this.linePlotData = [];
 
     // Remove from performance series those that are no longer present
