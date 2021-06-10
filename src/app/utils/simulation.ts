@@ -4,27 +4,22 @@ import { CalculatorUtils } from './calculatorUtils';
 
 export class Simulation {
 
+    // Recursive variables
     private simulationNumber: number;
     private loopStopper = 0;
+    private data: number[];
+
+    // Static
     public weights = [0.001, 1, 2, 3, 4, 5, 6, 7, 9, 10, 15, 20, 50]; // 5 is middle
 
+    // Inputs
     private listOfSeries: PerformanceSeries[];
     private riskFree: number;
 
-    data: number[];
+    // Outputs
     maxSharpeCalculation: PortfolioCalculation;
     minStdevCalculation: PortfolioCalculation;
-
     plotData: number[][];
-    // linePlotObject = {
-    //     x: [],
-    //     y: [],
-    //     mode: 'lines+markers'
-    // };
-    // linePlotData: {
-    //     x: number,
-    //     y: number;
-    // }[] = [];
 
     public constructor(listOfSeries: PerformanceSeries[], riskFree: number) {
         this.listOfSeries = listOfSeries;
@@ -37,9 +32,13 @@ export class Simulation {
         this.data = [this.listOfSeries.length];
 
         // Initialize array of plotData
-        this.plotData = new Array(this.weights.length);
-        for (let index = 0; index < this.weights.length; index++) {
-            this.plotData[index] = new Array(this.weights.length);
+        if (this.listOfSeries.length === 3) {
+            this.plotData = new Array(this.weights.length);
+            for (let index = 0; index < this.weights.length; index++) {
+                this.plotData[index] = new Array(this.weights.length);
+            }
+        } else {
+            this.plotData = [];
         }
 
         this.simulationNumber = 0;
@@ -49,18 +48,6 @@ export class Simulation {
         console.log('recursiveRun took ' + (t1 - t0) + ' milliseconds.');
         console.log('Number of simulations completed: ' + this.simulationNumber);
         console.log('Average simulation time: ' + (t1 - t0) / this.simulationNumber + ' milliseconds.');
-
-        // const xArray = [];
-        // const yArray = [];
-        // this.linePlotData.sort((a, b) => {
-        //     return a.x - b.x;
-        // });
-        // this.linePlotData.forEach(element => {
-        //     xArray.push(element.x);
-        //     yArray.push(element.y);
-        // });
-        // this.linePlotObject.x = xArray;
-        // this.linePlotObject.y = yArray;
     }
 
     // Only recursion logic
@@ -111,10 +98,6 @@ export class Simulation {
         // Create line plot
         if (this.listOfSeries.length === 2) {
             const weightRatio = holdingWeights[0] / (holdingWeights[0] + holdingWeights[1]);
-            // this.plotData.push({
-            //     x: weightRatio,
-            //     y: calculation.sharpeRatio
-            // });
             this.plotData.push([
                 weightRatio, calculation.sharpeRatio
             ]);
