@@ -39,7 +39,6 @@ export class AppComponent implements OnInit, OnDestroy {
   tickerSymbolsDB: string[] = [];
   tickerSymbolsDBSub: Subscription;
   tickerSymbols: string[] = [];
-  // surfacePlotData = [];
   linePlotData = [];
   plotLayout = {
     width: 800,
@@ -52,19 +51,6 @@ export class AppComponent implements OnInit, OnDestroy {
       title: 'Placeholder y axis title',
     },
   };
-  // plotLayoutSurface = {
-  //   width: 800,
-  //   height: 600,
-  //   title: 'Sharpe Ratio by weights',
-  //   xaxis: {
-  //     title: 'Placeholder x axis title',
-  //     type: 'category'
-  //   },
-  //   yaxis: {
-  //     title: 'Placeholder y axis title',
-  //     type: 'category'
-  //   },
-  // };
 
   constructor(
     private performanceWrapperService: PerformanceWrapperService,
@@ -144,7 +130,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   testSimulationLogic(): void {
-    // this.surfacePlotData = [];
     this.linePlotData = [];
     const sim = new Simulation(this.performanceSeriesList, RiskFreeNumbers.TBILL1MONTH2020);
     sim.startSimulation();
@@ -159,24 +144,6 @@ export class AppComponent implements OnInit, OnDestroy {
     }
     if (this.performanceSeriesList.length === 3) {
       this.surfacePlotData = sim.surfacePlotData;
-
-      // const plotDataObject = {
-      //   z: sim.surfacePlotData,
-      //   type: 'contour',
-      //   contours: {
-      //     // start: this.calculationMaxSharpe.sharpeRatio - 1,
-      //     // end: this.calculationMaxSharpe.sharpeRatio,
-      //     // size: 0.01,
-      //     coloring: 'heatmap',
-      //     showlabels: true
-      //   },
-      //   x: sim.weights,
-      //   y: sim.weights
-      // };
-      // this.plotLayoutSurface.xaxis.title = this.calculationMaxSharpe.holdingsData[1].ticker + ' weights';
-      // this.plotLayoutSurface.yaxis.title = this.calculationMaxSharpe.holdingsData[0].ticker + ' weights';
-      // this.surfacePlotData.push(plotDataObject);
-      // console.log('Plot data: ' + JSON.stringify(plotDataObject));
     }
   }
 
