@@ -43,6 +43,6 @@
 
   <app-scatter-plot [inputData]="calculations"></app-scatter-plot>
   <app-surface-plot [inputData]="calculationMaxSharpe" [axisPoints]="weights" [surfacePlotData]="surfacePlotData"></app-surface-plot>
-  <plotly-plot [data]="linePlotData" [layout]="plotLayout" *ngIf="linePlotData.length > 0"></plotly-plot>
+  <app-line-plot [inputData]="calculationMaxSharpe" [linePlotData]="linePlotData"></app-line-plot>
 
 </div>

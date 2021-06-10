@@ -1,5 +1,5 @@
 <ngb-accordion #acc="ngbAccordion" *ngIf="plotData && plotData.length > 0">
-  <ngb-panel title="Show/hide surface plot">
+  <ngb-panel title="Show/hide line plot">
     <ng-template ngbPanelContent>
       <plotly-plot [data]="plotData" [layout]="plotLayout"></plotly-plot>
     </ng-template>

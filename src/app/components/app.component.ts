@@ -30,6 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
   calculationMaxSharpe: PortfolioCalculation;
   weights: number[];
   surfacePlotData: number[][];
+  linePlotData: number[][];
   calculationMinStdev: PortfolioCalculation;
 
   // Control elements
@@ -39,18 +40,18 @@ export class AppComponent implements OnInit, OnDestroy {
   tickerSymbolsDB: string[] = [];
   tickerSymbolsDBSub: Subscription;
   tickerSymbols: string[] = [];
-  linePlotData = [];
-  plotLayout = {
-    width: 800,
-    height: 600,
-    title: 'Sharpe Ratio by weights',
-    xaxis: {
-      title: 'Placeholder x axis title',
-    },
-    yaxis: {
-      title: 'Placeholder y axis title',
-    },
-  };
+  // linePlotData = [];
+  // plotLayout = {
+  //   width: 800,
+  //   height: 600,
+  //   title: 'Sharpe Ratio by weights',
+  //   xaxis: {
+  //     title: 'Placeholder x axis title',
+  //   },
+  //   yaxis: {
+  //     title: 'Placeholder y axis title',
+  //   },
+  // };
 
   constructor(
     private performanceWrapperService: PerformanceWrapperService,
@@ -130,7 +131,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   testSimulationLogic(): void {
-    this.linePlotData = [];
+    // this.linePlotData = [];
     const sim = new Simulation(this.performanceSeriesList, RiskFreeNumbers.TBILL1MONTH2020);
     sim.startSimulation();
     this.calculationMaxSharpe = sim.maxSharpeCalculation;
@@ -138,12 +139,13 @@ export class AppComponent implements OnInit, OnDestroy {
     this.weights = sim.weights;
 
     if (this.performanceSeriesList.length === 2) {
-      this.linePlotData.push(sim.linePlotObject);
-      this.plotLayout.xaxis.title = this.calculationMaxSharpe.holdingsData[0].ticker + ' weights';
-      this.plotLayout.yaxis.title = this.calculationMaxSharpe.holdingsData[1].ticker + ' weights';
+      this.linePlotData = sim.plotData;
+      // this.linePlotData.push(sim.linePlotObject);
+      // this.plotLayout.xaxis.title = this.calculationMaxSharpe.holdingsData[0].ticker + ' weights';
+      // this.plotLayout.yaxis.title = this.calculationMaxSharpe.holdingsData[1].ticker + ' weights';
     }
     if (this.performanceSeriesList.length === 3) {
-      this.surfacePlotData = sim.surfacePlotData;
+      this.surfacePlotData = sim.plotData;
     }
   }
 
@@ -159,7 +161,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.calculationMaxSharpe = null;
     this.calculationMinStdev = null;
     this.surfacePlotData = null;
-    this.linePlotData = [];
+    this.linePlotData = null;
 
     // Remove from performance series those that are no longer present
     for (let index = 0; index < this.performanceSeriesList.length; index++) {

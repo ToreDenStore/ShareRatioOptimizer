@@ -15,16 +15,16 @@ export class Simulation {
     maxSharpeCalculation: PortfolioCalculation;
     minStdevCalculation: PortfolioCalculation;
 
-    surfacePlotData: number[][];
-    linePlotObject = {
-        x: [],
-        y: [],
-        mode: 'lines+markers'
-    };
-    private linePlotData: {
-        x: number,
-        y: number;
-    }[] = [];
+    plotData: number[][];
+    // linePlotObject = {
+    //     x: [],
+    //     y: [],
+    //     mode: 'lines+markers'
+    // };
+    // linePlotData: {
+    //     x: number,
+    //     y: number;
+    // }[] = [];
 
     public constructor(listOfSeries: PerformanceSeries[], riskFree: number) {
         this.listOfSeries = listOfSeries;
@@ -37,9 +37,9 @@ export class Simulation {
         this.data = [this.listOfSeries.length];
 
         // Initialize array of plotData
-        this.surfacePlotData = new Array(this.weights.length);
+        this.plotData = new Array(this.weights.length);
         for (let index = 0; index < this.weights.length; index++) {
-            this.surfacePlotData[index] = new Array(this.weights.length);
+            this.plotData[index] = new Array(this.weights.length);
         }
 
         this.simulationNumber = 0;
@@ -50,17 +50,17 @@ export class Simulation {
         console.log('Number of simulations completed: ' + this.simulationNumber);
         console.log('Average simulation time: ' + (t1 - t0) / this.simulationNumber + ' milliseconds.');
 
-        const xArray = [];
-        const yArray = [];
-        this.linePlotData.sort((a, b) => {
-            return a.x - b.x;
-        });
-        this.linePlotData.forEach(element => {
-            xArray.push(element.x);
-            yArray.push(element.y);
-        });
-        this.linePlotObject.x = xArray;
-        this.linePlotObject.y = yArray;
+        // const xArray = [];
+        // const yArray = [];
+        // this.linePlotData.sort((a, b) => {
+        //     return a.x - b.x;
+        // });
+        // this.linePlotData.forEach(element => {
+        //     xArray.push(element.x);
+        //     yArray.push(element.y);
+        // });
+        // this.linePlotObject.x = xArray;
+        // this.linePlotObject.y = yArray;
     }
 
     // Only recursion logic
@@ -111,10 +111,13 @@ export class Simulation {
         // Create line plot
         if (this.listOfSeries.length === 2) {
             const weightRatio = holdingWeights[0] / (holdingWeights[0] + holdingWeights[1]);
-            this.linePlotData.push({
-                x: weightRatio,
-                y: calculation.sharpeRatio
-            });
+            // this.plotData.push({
+            //     x: weightRatio,
+            //     y: calculation.sharpeRatio
+            // });
+            this.plotData.push([
+                weightRatio, calculation.sharpeRatio
+            ]);
         }
 
         // Create surface plot
@@ -122,7 +125,7 @@ export class Simulation {
             const xIndex = this.weights.indexOf(holdingWeights[0]);
             const yIndex = this.weights.indexOf(holdingWeights[1]);
             if (holdingWeights[2] === 5) {
-                this.surfacePlotData[xIndex][yIndex] = calculation.sharpeRatio;
+                this.plotData[xIndex][yIndex] = calculation.sharpeRatio;
             }
         }
     }
