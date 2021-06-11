@@ -1,1 +1,7 @@
-<plotly-plot [data]="plotData" [layout]="plotLayout" *ngIf="plotData && plotData.length > 0"></plotly-plot>
+<ngb-accordion #acc="ngbAccordion" *ngIf="plotData && plotData.length > 0" activeIds="panelId3">
+    <ngb-panel id="panelId3" [title]="title">
+      <ng-template ngbPanelContent>
+        <plotly-plot [data]="plotData" [layout]="plotLayout"></plotly-plot>
+      </ng-template>
+    </ngb-panel>
+  </ngb-accordion>

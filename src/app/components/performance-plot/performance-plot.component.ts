@@ -12,7 +12,7 @@ export class PerformancePlotComponent implements OnChanges {
   title = 'Performance';
 
   @Input()
-  inputData: VisualizableInGraph;
+  inputData: VisualizableInGraph[];
 
   plotData: any[];
   plotLayout = {
@@ -31,32 +31,37 @@ export class PerformancePlotComponent implements OnChanges {
   constructor() { }
 
   ngOnChanges(): void {
+    console.log('Changes detected in performance plot component');
+
     this.plotData = [];
     if (this.inputData) {
-      this.plotLayout.xaxis.title = this.inputData.name + ' performance';
+      this.inputData.forEach(calculation => {
+        this.plotLayout.xaxis.title = 'Performance';
 
-      let performance = [];
-      let dates = [];
-      this.inputData.performanceSeries.forEach(element => {
-        performance.push(element.performance);
-        dates.push(element.date);
+        let performance = [];
+        let dates = [];
+        calculation.performanceSeries.forEach(element => {
+          performance.push(element.performance);
+          dates.push(element.date);
+        });
+        dates = dates.reverse();
+        performance = performance.reverse();
+        const accPerformance = PerformanceUtils.getAccumulatedPerformance(performance);
+
+        const xArray = [];
+        const yArray = [];
+        for (let index = 0; index < dates.length; index++) {
+          xArray.push(dates[index]); // x
+          yArray.push(accPerformance[index]); // y
+        }
+        const linePlotObject = {
+          x: xArray,
+          y: yArray,
+          mode: 'lines',
+          name: calculation.name
+        };
+        this.plotData.push(linePlotObject);
       });
-      dates = dates.reverse();
-      performance = performance.reverse();
-      const accPerformance = PerformanceUtils.getAccumulatedPerformance(performance);
-
-      const xArray = [];
-      const yArray = [];
-      for (let index = 0; index < dates.length; index++) {
-        xArray.push(dates[index]); // x
-        yArray.push(accPerformance[index]); // y
-      }
-      const linePlotObject = {
-        x: xArray,
-        y: yArray,
-        mode: 'lines'
-      };
-      this.plotData.push(linePlotObject);
     }
   }
 

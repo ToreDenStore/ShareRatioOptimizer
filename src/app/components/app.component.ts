@@ -68,6 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
       calc.stDev = series.stDev;
       calc.performance = series.return;
       calc.riskFree = series.riskFree;
+      calc.performanceSeries = series.performanceSeries;
       calc.holdingsData = [];
       for (let i = 0; i < this.performanceSeriesList.length; i++) {
         const element = this.performanceSeriesList[i];
