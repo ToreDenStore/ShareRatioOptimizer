@@ -35,7 +35,6 @@ export class LinePlotComponent implements OnChanges {
     this.plotData = [];
     if (this.linePlotData) {
       this.plotLayout.xaxis.title = this.inputData.holdingsData[0].ticker + ' to ' + this.inputData.holdingsData[1].ticker + ' ratio (%)';
-      // this.plotLayout.yaxis.title = this.inputData.holdingsData[1].ticker + ' weights';
 
       const linePlotObject = {
         x: [],

@@ -24,4 +24,18 @@ export class PerformanceUtils {
         return (calc.performance - calc.riskFree) / calc.stDev;
     }
 
+    // Need to be reversed
+    public static getAccumulatedPerformance(performanceSeries: number[]): number[] {
+        const accumulatedPerformance = [];
+        accumulatedPerformance.push(0); // Initial
+        for (let index = 0; index < performanceSeries.length; index++) {
+            const dailyPerf = performanceSeries[index];
+            const previousDayAccPerf = accumulatedPerformance[index];
+            accumulatedPerformance.push(
+                (previousDayAccPerf + 1) * (dailyPerf + 1) - 1
+            );
+        }
+        return accumulatedPerformance;
+    }
+
 }
