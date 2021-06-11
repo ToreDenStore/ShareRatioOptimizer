@@ -1,3 +1,4 @@
+import { PerformancePlotComponent } from './components/performance-plot/performance-plot.component';
 import { LinePlotComponent } from './components/line-plot/line-plot.component';
 import { SurfacePlotComponent } from './components/surface-plot/surface-plot.component';
 import { ScatterPlotComponent } from './components/scatter-plot/scatter-plot.component';
@@ -23,7 +24,8 @@ import { NgxCsvParserModule } from 'ngx-csv-parser';
     AppComponent,
     ScatterPlotComponent,
     SurfacePlotComponent,
-    LinePlotComponent
+    LinePlotComponent,
+    PerformancePlotComponent
   ],
   imports: [
     BrowserModule,

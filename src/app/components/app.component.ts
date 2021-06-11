@@ -68,6 +68,7 @@ export class AppComponent implements OnInit, OnDestroy {
       calc.stDev = series.stDev;
       calc.performance = series.return;
       calc.riskFree = series.riskFree;
+      calc.performanceSeries = series.performanceSeries;
       calc.holdingsData = [];
       for (let i = 0; i < this.performanceSeriesList.length; i++) {
         const element = this.performanceSeriesList[i];
@@ -155,6 +156,7 @@ export class AppComponent implements OnInit, OnDestroy {
       });
       if (isInTickerList === undefined) {
         this.performanceSeriesList.splice(index, 1);
+        this.combineCalculations();
       }
     }
 
@@ -186,6 +188,8 @@ export class AppComponent implements OnInit, OnDestroy {
         });
         this.tickerSymbols.splice(tickerIndex, 1);
         alert('Error from component observable: ' + JSON.stringify(error));
+      }, () => {
+        this.combineCalculations();
       });
     });
 
