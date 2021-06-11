@@ -20,11 +20,11 @@ export class PerformancePlotComponent implements OnChanges {
     height: 600,
     title: this.title,
     xaxis: {
-      title: 'Placeholder x axis title',
+      title: 'Time',
     },
     yaxis: {
-      title: 'Sharpe Ratio',
-      tickformat: ',.2%'
+      title: 'Performance',
+      tickformat: ',.0%'
     },
   };
 
@@ -36,8 +36,6 @@ export class PerformancePlotComponent implements OnChanges {
     this.plotData = [];
     if (this.inputData) {
       this.inputData.forEach(calculation => {
-        this.plotLayout.xaxis.title = 'Performance';
-
         let performance = [];
         let dates = [];
         calculation.performanceSeries.forEach(element => {
