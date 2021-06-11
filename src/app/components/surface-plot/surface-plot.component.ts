@@ -8,6 +8,8 @@ import { PortfolioCalculation } from 'src/app/models/portfolio-calculation';
 })
 export class SurfacePlotComponent implements OnChanges {
 
+  title = 'Sharpe Ratio by weight ratios (surface plot)';
+
   @Input()
   inputData: PortfolioCalculation;
   @Input()
@@ -19,7 +21,7 @@ export class SurfacePlotComponent implements OnChanges {
   plotLayout = {
     width: 800,
     height: 600,
-    title: 'Sharpe Ratio by weights',
+    title: this.title,
     xaxis: {
       title: 'Placeholder x axis title',
       type: 'category'

@@ -8,6 +8,8 @@ import { PortfolioCalculation } from 'src/app/models/portfolio-calculation';
 })
 export class LinePlotComponent implements OnChanges {
 
+  title = 'Sharpe Ratio by weight ratio (line plot)';
+
   @Input()
   inputData: PortfolioCalculation;
   @Input()
@@ -17,9 +19,10 @@ export class LinePlotComponent implements OnChanges {
   plotLayout = {
     width: 800,
     height: 600,
-    title: 'Sharpe Ratio by weights',
+    title: this.title,
     xaxis: {
       title: 'Placeholder x axis title',
+      tickformat: ',.0%'
     },
     yaxis: {
       title: 'Sharpe Ratio',

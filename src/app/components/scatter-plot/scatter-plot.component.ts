@@ -8,6 +8,8 @@ import { Component, Input, OnChanges } from '@angular/core';
 })
 export class ScatterPlotComponent implements OnChanges {
 
+  title = 'Calculations (scatter plot)';
+
   @Input()
   inputData: VisualizableInGraph[];
 
@@ -15,15 +17,15 @@ export class ScatterPlotComponent implements OnChanges {
   plotLayout = {
     width: 800,
     height: 600,
-    title: 'Scatter plot',
+    title: this.title,
     xaxis: {
       title: 'Lower Volatility',
       autorange: 'reversed',
-      tickformat: ',.2%'
+      tickformat: ',.0%'
     },
     yaxis: {
       title: 'Higher Performance',
-      tickformat: ',.2%'
+      tickformat: ',.0%'
     }
   };
 
