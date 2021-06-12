@@ -8,7 +8,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 })
 export class ScatterPlotComponent implements OnChanges {
 
-  title = 'Calculations (scatter plot)';
+  title = 'Overview of calculations (scatter plot)';
 
   @Input()
   inputData: VisualizableInGraph[];
