@@ -1,12 +1,10 @@
 import { PerformancePoint } from './performance-point';
 
-export class PerformanceSeries {
-    ticker: string;
+export interface VisualizableInGraph {
+    name: string;
     stDev: number;
-    return: number;
+    performance: number;
     riskFree: number;
     sharpeRatio: number;
-    dateFrom: Date;
-    dateTo: Date;
     performanceSeries: PerformancePoint[];
 }

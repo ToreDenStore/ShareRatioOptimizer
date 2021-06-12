@@ -1,5 +1,5 @@
 import { PerformanceSeriesDb } from './../models/performance-series-db';
-import { ModelConverter } from './../utils/modelDbConverter';
+import { ModelConverter } from '../utils/modelConverter';
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection, DocumentReference } from '@angular/fire/firestore';
@@ -21,6 +21,7 @@ export class FirebasePerformanceService {
 
   addPerformance(series: PerformanceSeries): Promise<DocumentReference<PerformanceSeriesDb>> {
     const convertedModel = ModelConverter.convertToDbModel(series);
+    // console.log('Model: ' + JSON.stringify(series));
     // console.log('Converted model: ' + JSON.stringify(convertedModel));
     return this.performanceCollection.add(convertedModel);
   }

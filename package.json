@@ -28,6 +28,7 @@
     "firebase": "^7.0 || ^8.0",
     "mathjs": "^9.3.0",
     "ngx-chips": "^2.2.2",
+    "ngx-csv-parser": "0.0.7",
     "plotly.js": "^1.58.4",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

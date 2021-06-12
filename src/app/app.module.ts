@@ -1,3 +1,7 @@
+import { PerformancePlotComponent } from './components/performance-plot/performance-plot.component';
+import { LinePlotComponent } from './components/line-plot/line-plot.component';
+import { SurfacePlotComponent } from './components/surface-plot/surface-plot.component';
+import { ScatterPlotComponent } from './components/scatter-plot/scatter-plot.component';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './components/app.component';
@@ -13,10 +17,15 @@ import * as PlotlyJS from 'plotly.js/dist/plotly.js';
 import { PlotlyModule } from 'angular-plotly.js';
 import { CommonModule } from '@angular/common';
 PlotlyModule.plotlyjs = PlotlyJS;
+import { NgxCsvParserModule } from 'ngx-csv-parser';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ScatterPlotComponent,
+    SurfacePlotComponent,
+    LinePlotComponent,
+    PerformancePlotComponent
   ],
   imports: [
     BrowserModule,
@@ -29,7 +38,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
     CommonModule,
-    PlotlyModule
+    PlotlyModule,
+    NgxCsvParserModule
   ],
   providers: [],
   bootstrap: [AppComponent],

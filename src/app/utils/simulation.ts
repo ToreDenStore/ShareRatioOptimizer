@@ -4,39 +4,41 @@ import { CalculatorUtils } from './calculatorUtils';
 
 export class Simulation {
 
+    // Recursive variables
     private simulationNumber: number;
     private loopStopper = 0;
+    private data: number[];
+
+    // Static
     public weights = [0.001, 1, 2, 3, 4, 5, 6, 7, 9, 10, 15, 20, 50]; // 5 is middle
 
+    // Inputs
     private listOfSeries: PerformanceSeries[];
+    private riskFree: number;
 
-    data: number[];
+    // Outputs
     maxSharpeCalculation: PortfolioCalculation;
     minStdevCalculation: PortfolioCalculation;
+    plotData: number[][];
 
-    surfacePlotData: number[][];
-    linePlotObject = {
-        x: [],
-        y: [],
-        mode: 'lines+markers'
-    };
-    private linePlotData: {
-        x: number,
-        y: number;
-    }[] = [];
-
-    public constructor(listOfSeries: PerformanceSeries[]) {
+    public constructor(listOfSeries: PerformanceSeries[], riskFree: number) {
         this.listOfSeries = listOfSeries;
+        this.riskFree = riskFree;
     }
 
     public startSimulation(): void {
         console.log('Starting simulation with input: ' + JSON.stringify(this.weights));
+
         this.data = [this.listOfSeries.length];
 
         // Initialize array of plotData
-        this.surfacePlotData = new Array(this.weights.length);
-        for (let index = 0; index < this.weights.length; index++) {
-            this.surfacePlotData[index] = new Array(this.weights.length);
+        if (this.listOfSeries.length === 3) {
+            this.plotData = new Array(this.weights.length);
+            for (let index = 0; index < this.weights.length; index++) {
+                this.plotData[index] = new Array(this.weights.length);
+            }
+        } else {
+            this.plotData = [];
         }
 
         this.simulationNumber = 0;
@@ -46,18 +48,6 @@ export class Simulation {
         console.log('recursiveRun took ' + (t1 - t0) + ' milliseconds.');
         console.log('Number of simulations completed: ' + this.simulationNumber);
         console.log('Average simulation time: ' + (t1 - t0) / this.simulationNumber + ' milliseconds.');
-
-        const xArray = [];
-        const yArray = [];
-        this.linePlotData.sort((a, b) => {
-            return a.x - b.x;
-        });
-        this.linePlotData.forEach(element => {
-            xArray.push(element.x);
-            yArray.push(element.y);
-        });
-        this.linePlotObject.x = xArray;
-        this.linePlotObject.y = yArray;
     }
 
     // Only recursion logic
@@ -96,22 +86,21 @@ export class Simulation {
             holdings.push(holding);
         }
 
-        const calculation = CalculatorUtils.runPortfolioCalculation(holdings);
+        const calculation = CalculatorUtils.runPortfolioCalculation(holdings, this.riskFree);
 
         if (this.maxSharpeCalculation === undefined || calculation.sharpeRatio > this.maxSharpeCalculation.sharpeRatio) {
-            this.maxSharpeCalculation = calculation;
+            this.maxSharpeCalculation = {...calculation}; // Shallow copy
         }
         if (this.minStdevCalculation === undefined || calculation.stDev < this.minStdevCalculation.stDev) {
-            this.minStdevCalculation = calculation;
+            this.minStdevCalculation = {...calculation}; // Shallow copy
         }
 
         // Create line plot
         if (this.listOfSeries.length === 2) {
             const weightRatio = holdingWeights[0] / (holdingWeights[0] + holdingWeights[1]);
-            this.linePlotData.push({
-                x: weightRatio,
-                y: calculation.sharpeRatio
-            });
+            this.plotData.push([
+                weightRatio, calculation.sharpeRatio
+            ]);
         }
 
         // Create surface plot
@@ -119,7 +108,7 @@ export class Simulation {
             const xIndex = this.weights.indexOf(holdingWeights[0]);
             const yIndex = this.weights.indexOf(holdingWeights[1]);
             if (holdingWeights[2] === 5) {
-                this.surfacePlotData[xIndex][yIndex] = calculation.sharpeRatio;
+                this.plotData[xIndex][yIndex] = calculation.sharpeRatio;
             }
         }
     }

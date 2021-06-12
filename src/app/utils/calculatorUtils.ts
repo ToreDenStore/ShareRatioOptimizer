@@ -1,10 +1,10 @@
-import { PerformancePoint } from '../models/performance-series';
+import { PerformancePoint } from '../models/performance-point';
 import { PortfolioCalculation, PortfolioHolding } from '../models/portfolio-calculation';
 import { PerformanceUtils } from './performanceUtils';
 
 export class CalculatorUtils {
 
-    public static runPortfolioCalculation(holdings: PortfolioHolding[]): PortfolioCalculation {
+    public static runPortfolioCalculation(holdings: PortfolioHolding[], riskFree: number): PortfolioCalculation {
         const days = holdings[0].performanceSeries.length;
         const performances: number[] = [];
         const performancePoints: PerformancePoint[] = [];
@@ -40,7 +40,11 @@ export class CalculatorUtils {
         calculation.performanceSeries = performancePoints;
         calculation.performance = PerformanceUtils.getTotalPerformance(performances);
         calculation.stDev = PerformanceUtils.getStandardDeviationAnnualized(performances);
-        calculation.sharpeRatio = calculation.performance / calculation.stDev;
+        calculation.riskFree = riskFree;
+        calculation.sharpeRatio = PerformanceUtils.getSharpeRatioForCalc(calculation);
+
+        // console.log('Performance: ' + calculation.performance);
+        // console.log('riskFree: ' + riskFree);
 
         return calculation;
     }

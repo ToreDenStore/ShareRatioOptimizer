@@ -1,5 +1,5 @@
-<div class="middleOfScreen" style="max-width: 800px;">
-  <tag-input [(ngModel)]="tickerSymbols" (ngModelChange)="getTestRequest()" modelAsStrings="true" maxItems="4"
+<div class="middleOfScreen" style="max-width: 900px;">
+  <tag-input [(ngModel)]="tickerSymbols" (ngModelChange)="newTickers()" modelAsStrings="true" maxItems="4"
     placeholder="Enter a new ticker symbol"
     secondaryPlaceholder="Enter a ticker symbol"
     *ngIf="tickerSymbolsDB.length > 0"
@@ -13,7 +13,7 @@
   </tag-input>
   <button class="btn btn-primary" (click)="makePortfolioCalculations()"
     [disabled]="symbolsLoading > 0 || !performanceSeriesList || performanceSeriesList.length <= 0">
-    Run calculations
+    Optimize!
   </button>
   <table class="table table-striped">
     <thead>
@@ -21,17 +21,19 @@
         <th scope="col">Calculation</th>
         <th scope="col">Return</th>
         <th scope="col">Volatility</th>
+        <th scope="col">Risk free</th>
         <th scope="col">Sharpe ratio</th>
         <th scope="col" *ngFor="let series of performanceSeriesList">{{series.ticker}}</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of getCalculations();">
+      <tr *ngFor="let item of calculations;">
         <td>{{ item.name }}</td>
-        <td>{{ item.calc.performance | percent:'.2'}}</td>
-        <td>{{ item.calc.stDev | percent:'.2'}}</td>
-        <td>{{ item.calc.sharpeRatio | number: '.3'}}</td>
-        <td *ngFor="let holding of item.calc.holdingsData"
+        <td>{{ item.performance | percent:'.2'}}</td>
+        <td>{{ item.stDev | percent:'.2'}}</td>
+        <td>{{ item.riskFree | percent:'.2'}}</td>
+        <td>{{ item.sharpeRatio | number: '.3'}}</td>
+        <td *ngFor="let holding of item.holdingsData"
           [ngStyle]="{'font-weight': holding.weight === 1 ? 'bold' : 'normal', 'color': holding.weight === 0 ? 'LightGrey' : 'Black'}">
           {{holding.weight | percent:'.2'}}
         </td>
@@ -39,7 +41,9 @@
     </tbody>
   </table>
 
-  <plotly-plot [data]="surfacePlotData" [layout]="plotLayoutSurface" *ngIf="surfacePlotData.length > 0"></plotly-plot>
-  <plotly-plot [data]="linePlotData" [layout]="plotLayout" *ngIf="linePlotData.length > 0"></plotly-plot>
+  <app-surface-plot [inputData]="calculationMaxSharpe" [axisPoints]="weights" [surfacePlotData]="surfacePlotData"></app-surface-plot>
+  <app-line-plot [inputData]="calculationMaxSharpe" [linePlotData]="linePlotData"></app-line-plot>
+  <app-performance-plot [inputData]="calculations"></app-performance-plot>
+  <app-scatter-plot [inputData]="calculations"></app-scatter-plot>
 
 </div>

@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { NgxCsvParser } from 'ngx-csv-parser';
 import { Observable } from 'rxjs';
 import { local } from 'src/environments/local';
 import { ApiResponseHistoricalPrice } from '../models/api-response-historical-price';
@@ -41,6 +42,7 @@ export class HistoricalPriceService {
 
   constructor(
     private http: HttpClient
+    // ,private ngxCsvParser: NgxCsvParser
   ) { }
 
   getHistoricalData(dateFrom: Date, dateTo: Date, ticker: string): Observable<ApiResponseHistoricalPrice> {
@@ -63,5 +65,27 @@ export class HistoricalPriceService {
 
     return this.http.get<ApiResponseHistoricalPrice>(urlString, this.httpOptions);
   }
+
+  // getTBillData(): Observable<Price[]> {
+  //   return this.http.get('assets/BOND_BX_XTUP_TMUBMUSD01M.csv', {responseType: 'text'}).pipe(
+  //     map(x => {
+  //       const prices: Price[] = [];
+  //       const parseResult: any[][] = this.ngxCsvParser.csvStringToArray(x, ',');
+  //       for (let index = 1; index < parseResult.length - 1; index++) {
+  //         const row = parseResult[index];
+  //         const price: Price = {
+  //           date: new Date(row[0]),
+  //           close: this.parsePercentage(row[4])
+  //         };
+  //         prices.push(price);
+  //       }
+  //       return prices;
+  //     })
+  //   );
+  // }
+
+  // private parsePercentage(input: string): number {
+  //   return parseFloat(input) / 100.0;
+  // }
 
 }

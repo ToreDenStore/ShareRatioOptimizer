@@ -1,4 +1,4 @@
-import { ModelConverter } from './../utils/modelDbConverter';
+import { ModelConverter } from '../utils/modelConverter';
 import { FirebasePerformanceService } from './firebase-performance.service';
 import { Injectable } from '@angular/core';
 import { HistoricalPriceService } from './historical-price.service';
@@ -42,7 +42,12 @@ export class PerformanceWrapperService {
                 console.log('Response from API received for symbol ' + ticker + '.');
                 // console.log('Response from API received for symbol ' + ticker + ': ' + JSON.stringify(apiResponse));
                 if (apiResponse != null && apiResponse.prices.length > 0) {
-                  const performanceSeries = ModelConverter.historicPricesToPerformance(ticker, dateFrom, dateTo, apiResponse);
+                  const performanceSeries = ModelConverter.historicPricesToPerformance(
+                    ticker,
+                    dateFrom,
+                    dateTo,
+                    ModelConverter.apiPriceToPrice(apiResponse)
+                  );
                   observer.next(performanceSeries);
                   observer.complete();
                   console.log('Adding entry to db');
