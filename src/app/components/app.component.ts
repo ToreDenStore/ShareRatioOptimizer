@@ -102,6 +102,12 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   makePortfolioCalculations(): void {
+    this.calculateEqualWeights();
+    this.simulate();
+    this.combineCalculations();
+  }
+
+  calculateEqualWeights(): void {
     const holdings: PortfolioHolding[] = [];
 
     this.performanceSeriesList.forEach(performanceSerie => {
@@ -114,12 +120,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
     const calculation = CalculatorUtils.runPortfolioCalculation(holdings, RiskFreeNumbers.TBILL1MONTH2020);
     this.calculation = calculation;
-
-    this.testSimulationLogic();
-    this.combineCalculations();
   }
 
-  testSimulationLogic(): void {
+  simulate(): void {
     const sim = new Simulation(this.performanceSeriesList, RiskFreeNumbers.TBILL1MONTH2020);
     sim.startSimulation();
     this.calculationMaxSharpe = sim.maxSharpeCalculation;
@@ -134,7 +137,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
   }
 
-  getTestRequest(): void {
+  newTickers(): void {
     // console.log('Current model is ' + JSON.stringify(this.tickerSymbols));
     // const loadedTickers = [];
     // this.performanceSeriesList.forEach(series => {
@@ -174,25 +177,29 @@ export class AppComponent implements OnInit, OnDestroy {
     console.log('Tickers to ask for ' + JSON.stringify(tickerSymbolsNew));
 
     tickerSymbolsNew.forEach(symbol => {
-      this.symbolsLoading++;
-      this.performanceWrapperService.getPerformance(symbol, this.fromDate, this.toDate).subscribe(performanceSeries => {
-        this.symbolsLoading--;
-        console.log('Component observable response received for ticker ' + performanceSeries.ticker);
-        if (performanceSeries !== null) {
-          this.performanceSeriesList.push(performanceSeries);
-        }
-      }, error => {
-        this.symbolsLoading--;
-        const tickerIndex = this.tickerSymbols.findIndex(x => {
-          return x === symbol;
-        });
-        this.tickerSymbols.splice(tickerIndex, 1);
-        alert('Error from component observable: ' + JSON.stringify(error));
-      }, () => {
-        this.combineCalculations();
-      });
+      this.getTickerPerformance(symbol, this.fromDate, this.toDate);
     });
 
     return;
+  }
+
+  getTickerPerformance(symbol: string, fromDate: Date, toDate: Date): void {
+    this.symbolsLoading++;
+    this.performanceWrapperService.getPerformance(symbol, fromDate, toDate).subscribe(performanceSeries => {
+      this.symbolsLoading--;
+      console.log('Component observable response received for ticker ' + performanceSeries.ticker);
+      if (performanceSeries !== null) {
+        this.performanceSeriesList.push(performanceSeries);
+      }
+    }, error => {
+      this.symbolsLoading--;
+      const tickerIndex = this.tickerSymbols.findIndex(x => {
+        return x === symbol;
+      });
+      this.tickerSymbols.splice(tickerIndex, 1);
+      alert('Error from component observable: ' + JSON.stringify(error));
+    }, () => {
+      this.combineCalculations();
+    });
   }
 }

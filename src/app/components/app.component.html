@@ -1,5 +1,5 @@
-<div class="middleOfScreen" style="max-width: 800px;">
-  <tag-input [(ngModel)]="tickerSymbols" (ngModelChange)="getTestRequest()" modelAsStrings="true" maxItems="4"
+<div class="middleOfScreen" style="max-width: 900px;">
+  <tag-input [(ngModel)]="tickerSymbols" (ngModelChange)="newTickers()" modelAsStrings="true" maxItems="4"
     placeholder="Enter a new ticker symbol"
     secondaryPlaceholder="Enter a ticker symbol"
     *ngIf="tickerSymbolsDB.length > 0"
@@ -13,7 +13,7 @@
   </tag-input>
   <button class="btn btn-primary" (click)="makePortfolioCalculations()"
     [disabled]="symbolsLoading > 0 || !performanceSeriesList || performanceSeriesList.length <= 0">
-    Run calculations
+    Optimize!
   </button>
   <table class="table table-striped">
     <thead>
@@ -41,9 +41,9 @@
     </tbody>
   </table>
 
-  <app-performance-plot [inputData]="calculations"></app-performance-plot>
-  <app-scatter-plot [inputData]="calculations"></app-scatter-plot>
   <app-surface-plot [inputData]="calculationMaxSharpe" [axisPoints]="weights" [surfacePlotData]="surfacePlotData"></app-surface-plot>
   <app-line-plot [inputData]="calculationMaxSharpe" [linePlotData]="linePlotData"></app-line-plot>
+  <app-performance-plot [inputData]="calculations"></app-performance-plot>
+  <app-scatter-plot [inputData]="calculations"></app-scatter-plot>
 
 </div>
