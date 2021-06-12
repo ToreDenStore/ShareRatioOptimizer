@@ -1,3 +1,4 @@
+import { IntroductionComponent } from './components/introduction/introduction.component';
 import { PerformancePlotComponent } from './components/performance-plot/performance-plot.component';
 import { LinePlotComponent } from './components/line-plot/line-plot.component';
 import { SurfacePlotComponent } from './components/surface-plot/surface-plot.component';
@@ -25,7 +26,8 @@ import { NgxCsvParserModule } from 'ngx-csv-parser';
     ScatterPlotComponent,
     SurfacePlotComponent,
     LinePlotComponent,
-    PerformancePlotComponent
+    PerformancePlotComponent,
+    IntroductionComponent
   ],
   imports: [
     BrowserModule,
