@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { PlotAbstract } from 'src/app/abstract-components/plot-abstract';
 import { PortfolioCalculation } from 'src/app/models/portfolio-calculation';
 
 @Component({
@@ -6,7 +7,7 @@ import { PortfolioCalculation } from 'src/app/models/portfolio-calculation';
   templateUrl: './line-plot.component.html',
   styleUrls: ['./line-plot.component.css']
 })
-export class LinePlotComponent implements OnChanges {
+export class LinePlotComponent extends PlotAbstract implements OnChanges {
 
   title = 'Sharpe Ratio by weight ratio (line plot)';
 
@@ -17,8 +18,6 @@ export class LinePlotComponent implements OnChanges {
 
   plotData: any[];
   plotLayout = {
-    width: 800,
-    height: 600,
     title: this.title,
     xaxis: {
       title: 'Placeholder x axis title',
@@ -29,7 +28,9 @@ export class LinePlotComponent implements OnChanges {
     },
   };
 
-  constructor() { }
+  constructor() {
+    super();
+   }
 
   ngOnChanges(): void {
     this.plotData = [];

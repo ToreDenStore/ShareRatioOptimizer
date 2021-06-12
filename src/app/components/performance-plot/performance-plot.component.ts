@@ -1,13 +1,14 @@
 import { PerformanceUtils } from './../../utils/performanceUtils';
 import { VisualizableInGraph } from './../../models/visualizable-in-graph';
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
+import { PlotAbstract } from 'src/app/abstract-components/plot-abstract';
 
 @Component({
   selector: 'app-performance-plot',
   templateUrl: './performance-plot.component.html',
   styleUrls: ['./performance-plot.component.css']
 })
-export class PerformancePlotComponent implements OnChanges {
+export class PerformancePlotComponent extends PlotAbstract implements OnChanges  {
 
   title = 'Performance';
 
@@ -16,8 +17,6 @@ export class PerformancePlotComponent implements OnChanges {
 
   plotData: any[];
   plotLayout = {
-    width: 800,
-    height: 600,
     title: this.title,
     xaxis: {
       title: 'Time',
@@ -28,7 +27,9 @@ export class PerformancePlotComponent implements OnChanges {
     },
   };
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   ngOnChanges(): void {
     console.log('Changes detected in performance plot component');

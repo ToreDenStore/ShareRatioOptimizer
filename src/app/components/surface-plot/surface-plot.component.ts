@@ -1,12 +1,13 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { PortfolioCalculation } from 'src/app/models/portfolio-calculation';
+import { PlotAbstract } from 'src/app/abstract-components/plot-abstract';
 
 @Component({
   selector: 'app-surface-plot',
   templateUrl: './surface-plot.component.html',
   styleUrls: ['./surface-plot.component.css']
 })
-export class SurfacePlotComponent implements OnChanges {
+export class SurfacePlotComponent extends PlotAbstract implements OnChanges {
 
   title = 'Sharpe Ratio by weight ratios (surface plot)';
 
@@ -19,8 +20,6 @@ export class SurfacePlotComponent implements OnChanges {
 
   plotData: any[];
   plotLayout = {
-    width: 800,
-    height: 600,
     title: this.title,
     xaxis: {
       title: 'Placeholder x axis title',
@@ -32,7 +31,9 @@ export class SurfacePlotComponent implements OnChanges {
     },
   };
 
-  constructor() { }
+  constructor() {
+    super();
+  }
 
   ngOnChanges(): void {
     console.log('Changes detected in surface plot input');
