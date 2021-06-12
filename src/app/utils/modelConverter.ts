@@ -53,7 +53,7 @@ export class ModelConverter {
         });
         filteredList.forEach(apiPrice => {
             const price: Price = {
-                date: new Date(apiPrice.date / 1000),
+                date: new Date(apiPrice.date * 1000),
                 open: apiPrice.open,
                 close: apiPrice.close,
                 low: apiPrice.low,

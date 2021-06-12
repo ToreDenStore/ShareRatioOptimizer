@@ -21,6 +21,7 @@ export class FirebasePerformanceService {
 
   addPerformance(series: PerformanceSeries): Promise<DocumentReference<PerformanceSeriesDb>> {
     const convertedModel = ModelConverter.convertToDbModel(series);
+    // console.log('Model: ' + JSON.stringify(series));
     // console.log('Converted model: ' + JSON.stringify(convertedModel));
     return this.performanceCollection.add(convertedModel);
   }
