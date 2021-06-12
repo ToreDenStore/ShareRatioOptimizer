@@ -1,5 +1,6 @@
 import { VisualizableInGraph } from './../../models/visualizable-in-graph';
 import { Component, Input, OnChanges } from '@angular/core';
+import { StaticNumbers } from 'src/app/utils/static-numbers';
 
 @Component({
   selector: 'app-scatter-plot',
@@ -15,8 +16,8 @@ export class ScatterPlotComponent implements OnChanges {
 
   plotData: any[];
   plotLayout = {
-    width: 800,
-    height: 600,
+    width: StaticNumbers.PLOT_WIDTH,
+    height: StaticNumbers.PLOT_HEIGHT,
     title: this.title,
     xaxis: {
       title: 'Lower Volatility',

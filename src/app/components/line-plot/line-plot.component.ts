@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { PortfolioCalculation } from 'src/app/models/portfolio-calculation';
+import { StaticNumbers } from 'src/app/utils/static-numbers';
 
 @Component({
   selector: 'app-line-plot',
@@ -17,8 +18,8 @@ export class LinePlotComponent implements OnChanges {
 
   plotData: any[];
   plotLayout = {
-    width: 800,
-    height: 600,
+    width: StaticNumbers.PLOT_WIDTH,
+    height: StaticNumbers.PLOT_HEIGHT,
     title: this.title,
     xaxis: {
       title: 'Placeholder x axis title',

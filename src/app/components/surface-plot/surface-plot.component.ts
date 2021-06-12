@@ -1,3 +1,4 @@
+import { StaticNumbers } from './../../utils/static-numbers';
 import { Component, Input, OnChanges } from '@angular/core';
 import { PortfolioCalculation } from 'src/app/models/portfolio-calculation';
 
@@ -19,8 +20,8 @@ export class SurfacePlotComponent implements OnChanges {
 
   plotData: any[];
   plotLayout = {
-    width: 800,
-    height: 600,
+    width: StaticNumbers.PLOT_WIDTH,
+    height: StaticNumbers.PLOT_HEIGHT,
     title: this.title,
     xaxis: {
       title: 'Placeholder x axis title',

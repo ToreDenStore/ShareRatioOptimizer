@@ -1,6 +1,7 @@
 import { PerformanceUtils } from './../../utils/performanceUtils';
 import { VisualizableInGraph } from './../../models/visualizable-in-graph';
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { StaticNumbers } from 'src/app/utils/static-numbers';
 
 @Component({
   selector: 'app-performance-plot',
@@ -16,8 +17,8 @@ export class PerformancePlotComponent implements OnChanges {
 
   plotData: any[];
   plotLayout = {
-    width: 800,
-    height: 600,
+    width: StaticNumbers.PLOT_WIDTH,
+    height: StaticNumbers.PLOT_HEIGHT,
     title: this.title,
     xaxis: {
       title: 'Time',
