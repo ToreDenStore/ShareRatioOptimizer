@@ -1,13 +1,13 @@
 import { VisualizableInGraph } from './../../models/visualizable-in-graph';
 import { Component, Input, OnChanges } from '@angular/core';
-import { StaticNumbers } from 'src/app/utils/static-numbers';
+import { PlotAbstract } from 'src/app/abstract-components/plot-abstract';
 
 @Component({
   selector: 'app-scatter-plot',
   templateUrl: './scatter-plot.component.html',
   styleUrls: ['./scatter-plot.component.css']
 })
-export class ScatterPlotComponent implements OnChanges {
+export class ScatterPlotComponent extends PlotAbstract implements OnChanges {
 
   title = 'Overview of calculations (scatter plot)';
 
@@ -16,8 +16,6 @@ export class ScatterPlotComponent implements OnChanges {
 
   plotData: any[];
   plotLayout = {
-    width: StaticNumbers.PLOT_WIDTH,
-    height: StaticNumbers.PLOT_HEIGHT,
     title: this.title,
     xaxis: {
       title: 'Lower Volatility',
@@ -30,7 +28,9 @@ export class ScatterPlotComponent implements OnChanges {
     }
   };
 
-  constructor() { }
+  constructor() {
+    super();
+   }
 
   ngOnChanges(): void {
     console.log('Changes detected in scatter plot input');
