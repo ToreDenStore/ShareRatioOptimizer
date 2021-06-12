@@ -30,7 +30,7 @@ export class ScatterPlotComponent extends PlotAbstract implements OnChanges {
 
   constructor() {
     super();
-   }
+  }
 
   ngOnChanges(): void {
     console.log('Changes detected in scatter plot input');

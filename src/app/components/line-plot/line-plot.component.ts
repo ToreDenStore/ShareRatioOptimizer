@@ -30,7 +30,7 @@ export class LinePlotComponent extends PlotAbstract implements OnChanges {
 
   constructor() {
     super();
-   }
+  }
 
   ngOnChanges(): void {
     this.plotData = [];
