@@ -89,10 +89,10 @@ export class Simulation {
         const calculation = CalculatorUtils.runPortfolioCalculation(holdings, this.riskFree);
 
         if (this.maxSharpeCalculation === undefined || calculation.sharpeRatio > this.maxSharpeCalculation.sharpeRatio) {
-            this.maxSharpeCalculation = calculation;
+            this.maxSharpeCalculation = {...calculation}; // Shallow copy
         }
         if (this.minStdevCalculation === undefined || calculation.stDev < this.minStdevCalculation.stDev) {
-            this.minStdevCalculation = calculation;
+            this.minStdevCalculation = {...calculation}; // Shallow copy
         }
 
         // Create line plot
